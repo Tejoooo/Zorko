@@ -56,6 +56,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // _init();
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: SingleChildScrollView(

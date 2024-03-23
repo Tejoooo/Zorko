@@ -11,9 +11,10 @@ import 'package:zorko/models/fooditems.dart';
 import 'package:zorko/pages/Details.dart';
 import 'package:zorko/pages/fooditemspage.dart';
 import 'package:zorko/pages/home.dart';
+import 'package:zorko/pages/mapwithouturl.dart';
+import 'package:zorko/pages/myprofile.dart';
 import 'package:zorko/pages/posts.dart';
 import 'package:zorko/components/drawer.dart';
-import 'package:zorko/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
@@ -83,11 +84,10 @@ class _AppHomeState extends State<AppHome> {
 
     _pages = [
       Home(),
-      Posts(),
+      HeatMaps(),
       Posts(),
       FoodItemPage(),
-      // DetailsPage()
-      ProfilePage()
+      MyProfile(),
     ];
     _init();
   }
