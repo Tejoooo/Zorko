@@ -25,12 +25,8 @@ class _ScreensState extends State<Screens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Carousel'),
-      // ),
       body: Column(
         children: [
-          // SizedBox(height: 4),
           Container(
             height: 2,
             color: Colors.orange, // Orange line

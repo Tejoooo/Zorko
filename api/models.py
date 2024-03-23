@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.utils.safestring import mark_safe
 
 class UserDetails(models.Model):
     userID = models.CharField(max_length=100,unique=True,null=False,blank=False)
@@ -44,3 +45,13 @@ class Item(models.Model):
     image = models.ImageField(upload_to='items/',null=True,blank=True)
     category = models.CharField(max_length=100,null=False,blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def item_photo(self):
+        return mark_safe('<img src="{}" width="100" height="100" />'.format(self.image.url))
+    
+class Restaurants(models.Model):
+    name = models.CharField(max_length=100,null=False,blank=False)
+    address = models.TextField(null=False,blank=False)
+    longitude = models.FloatField(null=False,blank=False)
+    lattitude = models.FloatField(null=False,blank=False)
+    
