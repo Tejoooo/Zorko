@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zorko/pages/appHome.dart';
+import 'package:zorko/pages/foodView.dart';
 import 'pages/splashScreen.dart';
 
 void main() {
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         "/splash": (context) => Screens(),
         "/" : (context) => AppHome(),
         "/login": (context) => Screens(),
+        "/foodView":(context) => FoodIteamView(),
       },
     );
   }

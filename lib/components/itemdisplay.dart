@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_super_parameters
 
 import 'package:flutter/material.dart';
 
@@ -38,11 +38,24 @@ class _FoodItemState extends State<FoodItem> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        widget.imagePath,
-                        width: 138,
-                        height: 100,
-                        // fit: BoxFit.cover,
+                      GestureDetector(
+                        onTap: () {
+                          Map<String, dynamic> foodData = {
+                            "name": widget.itemName,
+                            "image": widget.imagePath,
+                            "price": widget.price,
+                            "description":
+                                "A mized source with alphenlibe choclates in middle and prepared with rotten tamotoes"
+                          };
+                          Navigator.pushNamed(context, "/foodView",
+                              arguments: foodData);
+                        },
+                        child: Image.asset(
+                          widget.imagePath,
+                          width: 138,
+                          height: 100,
+                          // fit: BoxFit.cover,
+                        ),
                       ),
                       SizedBox(
                         height: 5,
@@ -96,7 +109,10 @@ class _FoodItemState extends State<FoodItem> {
                         ),
                         child: Text(
                           'ADD',
-                          style: TextStyle(fontSize: 10),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700),
                         ),
                       ),
                     ),

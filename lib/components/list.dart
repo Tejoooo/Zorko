@@ -17,7 +17,7 @@ class _FoodListState extends State<FoodList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.only(left: 20,top: 5),
           child: Text(
             'Food',
             style: TextStyle(
