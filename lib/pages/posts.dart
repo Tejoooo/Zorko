@@ -18,8 +18,27 @@ class _PostsState extends State<Posts> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              PostComponent(PostURL: "assets/post1.png",ProfileImage: "assets/profile.png",ProfileName: "CB Praveen",text: "Food is very necessary in our daily life. Today we had a very delicious Alfredo cheese pasta and it tastes like heaven and very one should try this item from Zoroko.",),
-              PostComponent(PostURL: "assets/post2.png",ProfileImage:"assets/profile.png",ProfileName: "Marvis Ighedosa",text: "Food is very necessary in our daily life. Today we had a very delicious Alfredo cheese pasta and it tastes like heaven and very one should try this item from Zoroko.",),
+              SizedBox(
+                height: 12,
+              ),
+              Column(
+                children: [
+                  PostComponent(
+                    PostURL: "assets/post1.png",
+                    ProfileImage: "assets/profile.png",
+                    ProfileName: "CB Praveen",
+                    text:
+                        "Food is very necessary in our daily life. Today we had a very delicious Alfredo cheese pasta and it tastes like heaven and very one should try this item from Zoroko.",
+                  ),
+                  PostComponent(
+                    PostURL: "assets/post2.png",
+                    ProfileImage: "assets/profile.png",
+                    ProfileName: "Marvis Ighedosa",
+                    text:
+                        "Food is very necessary in our daily life. Today we had a very delicious Alfredo cheese pasta and it tastes like heaven and very one should try this item from Zoroko.",
+                  ),
+                ],
+              )
             ],
           ),
         ),
@@ -33,32 +52,35 @@ class PostComponent extends StatelessWidget {
   String text;
   String ProfileImage;
   String ProfileName;
-  PostComponent({
-    super.key,
-    required this.PostURL,
-    required this.text,
-    required this.ProfileImage,
-    required this.ProfileName
-  });
+  PostComponent(
+      {super.key,
+      required this.PostURL,
+      required this.text,
+      required this.ProfileImage,
+      required this.ProfileName});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top:10.0,bottom: 10.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Column(
         children: [
           Container(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left:15.0),
+                  padding: const EdgeInsets.only(left: 15.0),
                   child: Row(
                     children: [
                       Image(image: AssetImage(ProfileImage)),
                       SizedBox(
                         width: 10,
                       ),
-                      Text(ProfileName,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
+                      Text(
+                        ProfileName,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700),
+                      ),
                     ],
                   ),
                 ),
@@ -87,7 +109,7 @@ class PostComponent extends StatelessWidget {
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left:12.0,right: 8.0),
+                  padding: const EdgeInsets.only(left: 12.0, right: 8.0),
                   child: Text(text),
                 )
               ],
