@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import UserDetails,Posts,Item,CartItem
 from .serializers import UserDetailsSerializer,PostsSerializer,ItemSerializer,CartItemSerializer
+import json
 
 
 class UserView(APIView):
@@ -75,7 +76,9 @@ class AddtoCartView(APIView):
     def post(self,request):
         userID = request.data.get('userID')
         itemID = request.data.get('itemID')
-        cartItem = CartItem.objects.filter(user__userID=userID,item__id=itemID).first()
+        user = UserDetails.objects.filter(userID=userID).first()
+        item = Item.objects.filter(id=int(itemID)).first()
+        cartItem = CartItem.objects.filter(user=user,item=item).first()
         if cartItem:
             cartItem.quantity += 1
             cartItem.save()
@@ -88,9 +91,11 @@ class AddtoCartView(APIView):
         
 class DeleteFromCartView(APIView):
     def post(self,request):
+        itemID = int(request.data.get('itemID'))
         userID = request.data.get('userID')
-        itemID = request.data.get('itemID')
-        cartItem = CartItem.objects.filter(user__userID=userID,item__id=itemID).first()
+        user = UserDetails.objects.filter(userID=userID).first()
+        item = Item.objects.filter(id=int(itemID)).first()
+        cartItem = CartItem.objects.filter(user=user,item=item).first()
         if cartItem:
             if cartItem.quantity == 1:
                 cartItem.delete()
@@ -109,3 +114,16 @@ class CartView(APIView):
             serializer_data = self.serializer_class(cartItems,many=True)
             return Response(data=serializer_data.data,status=status.HTTP_200_OK)
         return Response(data={"message":"Cart is empty"},status=status.HTTP_404_NOT_FOUND)
+    
+class HomeItemsView(APIView):
+    serializer_class = ItemSerializer
+    def get(self,request):
+        items = Item.objects.all()
+        categories = Item.objects.values_list('category',flat=True).distinct()
+        serialized_data = []
+        for category in categories:
+            items_in_category = items.filter(category=category)[:5]
+            serialized_items = self.serializer_class(items_in_category, many=True).data
+            serialized_data.append(serialized_items)
+        return Response(data=serialized_data, status=status.HTTP_200_OK)
+    

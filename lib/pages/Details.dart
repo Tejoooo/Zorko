@@ -28,7 +28,7 @@ class _DetailsPageState extends State<DetailsPage> {
   void _register() async{
     const apiURL = backendURL+"api/user/";
     User? user = FirebaseAuth.instance.currentUser;
-    String? token = await user!.getIdToken();
+    String? token = user!.uid;
     String? phoneNumber = user.phoneNumber;
     debugPrint(token!.length.toString());
     final response = await http.post(Uri.parse(apiURL),body: {

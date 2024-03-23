@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:zorko/components/itemdisplay.dart';
+import 'package:zorko/models/Itemmodel.dart';
 
 class FoodList extends StatefulWidget {
   String foodName;
-  FoodList({super.key,required this.foodName});
+  List<Item> items;
+  FoodList({super.key,required this.foodName,required this.items});
 
   @override
   State<FoodList> createState() => _FoodListState();
@@ -30,37 +33,26 @@ class _FoodListState extends State<FoodList> {
         SizedBox(height: 5),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              SizedBox(width: 5),
-              FoodItem(
-                imagePath: 'assets/h7.png',
-                itemName: 'Burger',
-                price: 10.0,
-              ),
-              SizedBox(width: 10), // Add spacing between items
-              FoodItem(
-                imagePath: 'assets/h6.png',
-                itemName: 'Burger',
-                price: 10.0,
-              ),
-              SizedBox(width: 10),
-              FoodItem(
-                imagePath: 'assets/h7.png',
-                itemName: 'Burger',
-                price: 10.0,
-              ),
-              SizedBox(width: 10), // Add spacing between items
-              FoodItem(
-                imagePath: 'assets/h6.png',
-                itemName: 'Burger',
-                price: 10.0,
-              ),
-              // Add more FoodItem widgets as needed
-            ],
-          ),
+          child: EachItemWithSpace(widget.items),
         ),
       ],
     );
   }
 }
+
+Widget EachItemWithSpace(List<Item> items){
+  List<Widget> itemWidgets = [];
+  items.forEach((element) {
+    itemWidgets.add(SizedBox(height: 10,));
+    itemWidgets.add(FoodItem(
+      imagePath: element.image,
+      id : element.id,
+      itemName: element.name,
+      price: double.parse(element.price),
+      description: element.description,
+    ));
+    itemWidgets.add(SizedBox(width: 10));
+  });
+  return Row(children: itemWidgets,);
+}
+

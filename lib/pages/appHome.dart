@@ -44,7 +44,7 @@ class _AppHomeState extends State<AppHome> {
   void _init() async{
     User? user = FirebaseAuth.instance.currentUser;
     if(user != null){
-      String? token = await user.getIdToken();
+      String? token = user.uid;
       String apiURL = backendURL + "api/user/";
       if (token != null) {
         apiURL = apiURL + "?userID=" + token;
@@ -54,9 +54,6 @@ class _AppHomeState extends State<AppHome> {
       );
       if (response.statusCode == 200){
         setRegistered(true);
-      }
-      else {
-        ErrorSnackBar(context, "Looks like something went wrong");
       }
     }
   }

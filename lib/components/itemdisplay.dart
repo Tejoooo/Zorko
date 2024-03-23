@@ -1,17 +1,25 @@
-// ignore_for_file: prefer_const_constructors, use_super_parameters
+// ignore_for_file: prefer_const_constructors, use_super_parameters, unused_local_variable
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zorko/components/snackBar.dart';
+import 'package:zorko/constants.dart';
+import 'package:http/http.dart' as http;
 
 class FoodItem extends StatefulWidget {
   final String imagePath;
   final String itemName;
   final double price;
+  final String description;
+  final String id;
 
   const FoodItem({
     Key? key,
     required this.imagePath,
     required this.itemName,
     required this.price,
+    required this.description,
+    required this.id
   }) : super(key: key);
 
   @override
@@ -19,6 +27,29 @@ class FoodItem extends StatefulWidget {
 }
 
 class _FoodItemState extends State<FoodItem> {
+  Future<bool> cartFunction(int count) async {
+    String apiURL = backendURL + "api/";
+    if (count == 1) {
+      apiURL += "add_to_cart/";
+    } else if (count == -1) {
+      apiURL += "delete_from_cart/";
+    }
+    User? user = await FirebaseAuth.instance.currentUser;
+    String? token = user?.uid;
+    
+    print(token);
+    final response = await http.post(Uri.parse(apiURL), body: {
+      "itemID": widget.id,
+      'userID': token.toString() ?? "token",
+    });
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  int count = 0;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -44,14 +75,13 @@ class _FoodItemState extends State<FoodItem> {
                             "name": widget.itemName,
                             "image": widget.imagePath,
                             "price": widget.price,
-                            "description":
-                                "A mized source with alphenlibe choclates in middle and prepared with rotten tamotoes"
+                            "description":widget.description
                           };
                           Navigator.pushNamed(context, "/foodView",
                               arguments: foodData);
                         },
-                        child: Image.asset(
-                          widget.imagePath,
+                        child: Image.network(
+                          backendURL+ widget.imagePath,
                           width: 138,
                           height: 100,
                           // fit: BoxFit.cover,
@@ -82,41 +112,141 @@ class _FoodItemState extends State<FoodItem> {
                   SizedBox(
                     height: 10,
                   ),
-                  SizedBox(
-                    height: 40,
-                    width: 150,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(10), // Set the border radius
-                        color: Color(
-                            0xFFEF7931), // Set the background color to EF7931
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Add your onPressed logic here
-                        },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.transparent,
-                          padding:
-                              EdgeInsets.all(8), // Adjust padding as needed
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                10), // Adjust the border radius as needed
+                  count == 0
+                      ? SizedBox(
+                          height: 40,
+                          width: 150,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                  10), // Set the border radius
+                              color: Color(
+                                  0xFFEF7931), // Set the background color to EF7931
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () async{
+                                // Add your onPressed logic here
+                                if (await cartFunction(1)){
+                                  setState(() {
+                                    count++;
+                                  });
+                                } else{
+                                  ErrorSnackBar(context, "Operation not done");
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                backgroundColor: Colors.transparent,
+                                padding: EdgeInsets.all(
+                                    8), // Adjust padding as needed
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Adjust the border radius as needed
+                                ),
+                                elevation: 0, // Set text color
+                              ),
+                              child: Text(
+                                'ADD',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
                           ),
-                          elevation: 0, // Set text color
-                        ),
-                        child: Text(
-                          'ADD',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                  )
+                        )
+                      : SizedBox(
+                          height: 40,
+                          width: 150,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Set the border radius
+                                  color: Color(
+                                      0xFFEF7931), // Set the background color to EF7931
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () async{
+                                    if (await cartFunction(-1)){
+                                  setState(() {
+                                    count--;
+                                  });
+                                } else{
+                                  ErrorSnackBar(context, "Operation not done");
+                                }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.black,
+                                    backgroundColor: Colors.transparent,
+                                    padding: EdgeInsets.all(
+                                        8), // Adjust padding as needed
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10), // Adjust the border radius as needed
+                                    ),
+                                    elevation: 0, // Set text color
+                                  ),
+                                  child: Text(
+                                    '-',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                count.toString(),
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              Container(
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      10), // Set the border radius
+                                  color: Color(
+                                      0xFFEF7931), // Set the background color to EF7931
+                                ),
+                                child: ElevatedButton(
+                                  onPressed: () async{
+                                    if (await cartFunction(1)){
+                                  setState(() {
+                                    count++;
+                                  });
+                                } else{
+                                  ErrorSnackBar(context, "Operation not done");
+                                }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.black,
+                                    backgroundColor: Colors.transparent,
+                                    padding: EdgeInsets.all(
+                                        8), // Adjust padding as needed
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          10), // Adjust the border radius as needed
+                                    ),
+                                    elevation: 0, // Set text color
+                                  ),
+                                  child: Text(
+                                    '+',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                 ],
               ),
             ),
