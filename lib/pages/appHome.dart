@@ -3,12 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:zorko/components/bottomnavigationbar.dart';
 import 'package:zorko/components/fooditemtile.dart';
+import 'package:zorko/components/snackBar.dart';
+import 'package:zorko/constants.dart';
 import 'package:zorko/models/fooditems.dart';
 import 'package:zorko/pages/Details.dart';
 import 'package:zorko/pages/fooditemspage.dart';
 import 'package:zorko/pages/home.dart';
 import 'package:zorko/pages/posts.dart';
 import 'package:zorko/components/drawer.dart';
+import 'package:zorko/pages/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 class AppHome extends StatefulWidget {
   const AppHome({super.key});
@@ -21,11 +26,39 @@ class _AppHomeState extends State<AppHome> {
   var _currentIndex = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late final List<Widget> _pages;
+  bool isRegistered = false;
 
   void setIndex(int val) {
     setState(() {
       _currentIndex = val;
     });
+  }
+
+  void setRegistered(bool val) {
+    setState(() {
+      isRegistered = val;
+    });
+  }
+
+
+  void _init() async{
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user != null){
+      String? token = await user.getIdToken();
+      String apiURL = backendURL + "api/user/";
+      if (token != null) {
+        apiURL = apiURL + "?userID=" + token;
+      }
+      final response = await http.get(
+        Uri.parse(apiURL)
+      );
+      if (response.statusCode == 200){
+        setRegistered(true);
+      }
+      else {
+        ErrorSnackBar(context, "Looks like something went wrong");
+      }
+    }
   }
 
   @override
@@ -37,8 +70,10 @@ class _AppHomeState extends State<AppHome> {
       Posts(),
       Posts(),
       FoodItemPage(),
-      DetailsPage()
+      // DetailsPage()
+      ProfilePage()
     ];
+    _init();
   }
 
   void _onItemTapped(int index) {
@@ -49,7 +84,7 @@ class _AppHomeState extends State<AppHome> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return !isRegistered? DetailsPage(setRegistered: setRegistered,): WillPopScope(
         onWillPop: () async {
           if (_currentIndex != 0) {
             setState(() {

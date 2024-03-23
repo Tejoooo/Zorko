@@ -3,11 +3,11 @@ from django.contrib.postgres.fields import ArrayField
 from django.utils.safestring import mark_safe
 
 class UserDetails(models.Model):
-    userID = models.CharField(max_length=100,unique=True,null=False,blank=False)
+    userID = models.CharField(max_length=2000,unique=True,null=False,blank=False)
     name = models.CharField(max_length=100,null=False,blank=False)
-    ph_no = models.IntegerField(null=False,blank=False)
+    ph_no = models.CharField(max_length=30,null=False,blank=False)
     address = models.CharField(max_length=100,null=False,blank=False)
-    pincode = models.IntegerField(null=False,blank=False)
+    pincode = models.CharField(max_length=10,null=False,blank=False)
     state = models.CharField(max_length=100,null=False,blank=False)
     coins = models.IntegerField(default=0)
     profilepic = models.ImageField(upload_to='profilepics/',null=True,blank=True,default='profilepics/default.png')

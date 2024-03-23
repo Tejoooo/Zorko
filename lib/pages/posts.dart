@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'package:zorko/components/snackBar.dart';
+import 'package:zorko/constants.dart';
 
 class Posts extends StatefulWidget {
   const Posts({super.key});
@@ -11,6 +14,23 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
+
+  void _init() async {
+    const apiURL = backendURL + "api/posts/";
+    final response = await http.get(Uri.parse(apiURL));
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+    } else {
+      ErrorSnackBar(context, "Looks like something went wrong");
+    } 
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _init();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(

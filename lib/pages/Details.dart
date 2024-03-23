@@ -1,10 +1,16 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'package:zorko/constants.dart';
+import 'package:zorko/components/snackBar.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key});
+  final Function setRegistered;
+  DetailsPage({super.key,required this.setRegistered});
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
@@ -18,6 +24,29 @@ class _DetailsPageState extends State<DetailsPage> {
   TextEditingController _addressController = TextEditingController();
 
   TextEditingController _pincodeController = TextEditingController();
+
+  void _register() async{
+    const apiURL = backendURL+"api/user/";
+    User? user = FirebaseAuth.instance.currentUser;
+    String? token = await user!.getIdToken();
+    String? phoneNumber = user.phoneNumber;
+    debugPrint(token!.length.toString());
+    final response = await http.post(Uri.parse(apiURL),body: {
+      "userID" : token,
+      "name": _usernameController.text,
+      "ph_no": phoneNumber,
+      "address": _addressController.text,
+      "pincode": _pincodeController.text,
+      "state":"dup",
+    });
+    debugPrint("lakshay;");
+    debugPrint(response.statusCode.toString());
+    if (response.statusCode == 201){
+      widget.setRegistered(true);
+    } else {
+      ErrorSnackBar(context, response.body);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,35 +73,34 @@ class _DetailsPageState extends State<DetailsPage> {
       //     Padding(padding: EdgeInsets.only(top: 100),child: Image(image: AssetImage('assets/registerProfile.png')),),
       //   ],
       // ),
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Stack(children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],
-                      ),
-                    ),
-                    child: Image(
-                      image: AssetImage('assets/registerProfile.png'),
+              Stack(children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 60, top: 70),
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 28,
-                    ),
-                  )
-                ]),
-              ),
+                  child: Image(
+                    image: AssetImage('assets/registerProfile.png'),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 60, top: 70),
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 28,
+                  ),
+                )
+              ]),
               SizedBox(
                 height: 30,
               ),
@@ -99,18 +127,22 @@ class _DetailsPageState extends State<DetailsPage> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                
-                padding: EdgeInsets.only(top: 20,bottom: 20,left: 130,right: 130),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],
+              GestureDetector(
+                onTap: (){
+                  _register();
+                },
+                child: Container(
+                  padding: EdgeInsets.only(top: 20,bottom: 20,left: 130,right: 130),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],
+                    ),
+                    borderRadius:BorderRadius.circular(100.0),
                   ),
-                  borderRadius:BorderRadius.circular(100.0),
+                  child: Text("Proceed",style: TextStyle(color: Colors.white),),
                 ),
-                child: Text("Proceed",style: TextStyle(color: Colors.white),),
               )
             ],
           ),
@@ -138,6 +170,7 @@ class RegisterInputField extends StatelessWidget {
           const EdgeInsets.only(left: 45.0, right: 45, top: 10, bottom: 10),
       child: Center(
           child: TextField(
+            controller: controller,
         decoration: InputDecoration(
             hintText: hintText,
             border: OutlineInputBorder(

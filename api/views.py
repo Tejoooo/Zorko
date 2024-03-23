@@ -10,7 +10,7 @@ class UserView(APIView):
     serializer_class = UserDetailsSerializer
     def get(self,request):
         userID = request.GET.get('userID')
-        user = UserDetails.objects.get(userID=userID)
+        user = UserDetails.objects.filter(userID=userID).first()
         if not user:
             return Response(data={"error":"User Doesn't exist"},status=status.HTTP_404_NOT_FOUND)
         user_serializer = self.serializer_class(user)
