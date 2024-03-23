@@ -109,7 +109,8 @@ class CartView(APIView):
     serializer_class = CartItemSerializer
     def post(self,request):
         userID = request.data.get('userID')
-        cartItems = CartItem.objects.filter(user__userID=userID)
+        user = UserDetails.objects.filter(userID=userID).first()
+        cartItems = CartItem.objects.filter(user=user)
         if cartItems:
             serializer_data = self.serializer_class(cartItems,many=True)
             return Response(data=serializer_data.data,status=status.HTTP_200_OK)

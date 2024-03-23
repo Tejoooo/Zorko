@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserDetails,Posts,Item,Restaurants
+from .models import UserDetails,Posts,Item,Restaurants,CartItem
 # Register your models here.
 
 admin.site.register(Posts)
@@ -22,3 +22,4 @@ class RestaurantsCustom(admin.ModelAdmin):
     search_fields = ("name","address","longitude","lattitude")
     
 admin.site.register(Restaurants,RestaurantsCustom)
+admin.site.register(CartItem)

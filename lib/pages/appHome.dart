@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:zorko/components/bottomnavigationbar.dart';
 import 'package:zorko/components/fooditemtile.dart';
@@ -27,6 +29,7 @@ class _AppHomeState extends State<AppHome> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late final List<Widget> _pages;
   bool isRegistered = false;
+  String coins = "0";
 
   void setIndex(int val) {
     setState(() {
@@ -54,7 +57,23 @@ class _AppHomeState extends State<AppHome> {
       );
       if (response.statusCode == 200){
         setRegistered(true);
+        fetchUserDetails(token);
       }
+    }
+  }
+
+  void fetchUserDetails(String token) async{
+    String apiURL = backendURL + "api/user/"+ "?userID=" + token;
+    final response = await http.get(Uri.parse(apiURL));
+    if (response.statusCode == 200){
+      Map<String, dynamic> data = jsonDecode(response.body);
+      print(data);
+      setState(() {
+        coins = data['coins'].toString();
+        print(coins);
+      });
+    } else{
+      ErrorSnackBar(context, "user details unable to fetch");
     }
   }
 
@@ -123,12 +142,13 @@ class _AppHomeState extends State<AppHome> {
                 icon: Icon(Icons.shopping_cart),
                 onPressed: () {
                   // Navigate to cart screen or show cart items
+                  Navigator.pushNamed(context, "/cart");
                 },
               ),
               SizedBox(width: 10), // Add some spacing between icons
               Icon(Icons.monetization_on),
               SizedBox(width: 5),
-              Text('100'), // Display user's coins
+              Text(coins), // Display user's coins
               SizedBox(width: 10), // Add some spacing between icons
             ],
           ),

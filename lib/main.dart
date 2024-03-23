@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zorko/firebase_options.dart';
 import 'package:zorko/pages/appHome.dart';
+import 'package:zorko/pages/cartPage.dart';
 import 'package:zorko/pages/foodView.dart';
 import 'package:zorko/pages/otpscreen.dart';
 import 'package:zorko/repository/authentication_repository.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         "/splash": (context) => Screens(),
         "/login" : (context) => OTPScreen(),
         "/foodView":(context) => FoodIteamView(),
+        "/cart":(context) => CartPage(),
       },
     );
   }
