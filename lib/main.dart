@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import './components/splashScreen.dart';
+import 'package:zorko/pages/appHome.dart';
+import 'pages/splashScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,10 +20,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: "/splash",
+      initialRoute: "/",
       routes: {
         "/splash": (context) => Screens(),
-        "/" : (context) => Screens(),
+        "/" : (context) => AppHome(),
         "/login": (context) => Screens(),
       },
     );

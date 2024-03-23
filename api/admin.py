@@ -2,14 +2,14 @@ from django.contrib import admin
 from .models import UserDetails,Posts,Item,Restaurants
 # Register your models here.
 
-admin.site.register(Posts)
+# admin.site.register(Posts)
 
-class UserDetailsAdmin(admin.ModelAdmin):
-    list_display = ("userID","name","ph_no")
-    search_fields = ('userID','name')
+# class UserDetailsAdmin(admin.ModelAdmin):
+#     list_display = ("userID","name","ph_no")
+#     search_fields = ('userID','name')
 
 
-admin.site.register(UserDetails,UserDetailsAdmin)
+# admin.site.register(UserDetails,UserDetailsAdmin)
 
 class ItemsCustom(admin.ModelAdmin):
     list_display = ("name",'price','item_photo',"category")
