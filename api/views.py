@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from .models import UserDetails,Posts
-from .serializers import UserDetailsSerializer,PostsSerializer
+from .models import UserDetails,Posts,Item,CartItem
+from .serializers import UserDetailsSerializer,PostsSerializer,ItemSerializer,CartItemSerializer
 
 
 class UserView(APIView):
@@ -70,3 +70,42 @@ class CommentView(APIView):
         comments['comments'].append({'userID': userID, 'comment': comment})
         post.save()
         return Response(data={"message":"Comment Added"},status=status.HTTP_201_CREATED)
+
+class AddtoCartView(APIView):
+    def post(self,request):
+        userID = request.data.get('userID')
+        itemID = request.data.get('itemID')
+        cartItem = CartItem.objects.filter(user__userID=userID,item__id=itemID).first()
+        if cartItem:
+            cartItem.quantity += 1
+            cartItem.save()
+            return Response(data={"message":"Item added to cart"},status=status.HTTP_200_OK)
+        else:
+            user = UserDetails.objects.get(userID=userID)
+            item = Item.objects.get(id=itemID)
+            cartItem = CartItem.objects.create(user=user,item=item)
+            return Response(data={"message":"Item added to cart"},status=status.HTTP_201_CREATED)
+        
+class DeleteFromCartView(APIView):
+    def post(self,request):
+        userID = request.data.get('userID')
+        itemID = request.data.get('itemID')
+        cartItem = CartItem.objects.filter(user__userID=userID,item__id=itemID).first()
+        if cartItem:
+            if cartItem.quantity == 1:
+                cartItem.delete()
+                return Response(data={"message":"Item removed from cart"},status=status.HTTP_200_OK)
+            cartItem.quantity -= 1
+            cartItem.save()
+            return Response(data={"message":"Item removed from cart"},status=status.HTTP_200_OK)
+        return Response(data={"message":"Item not in cart"},status=status.HTTP_404_NOT_FOUND)
+    
+class CartView(APIView):
+    serializer_class = CartItemSerializer
+    def post(self,request):
+        userID = request.data.get('userID')
+        cartItems = CartItem.objects.filter(user__userID=userID)
+        if cartItems:
+            serializer_data = self.serializer_class(cartItems,many=True)
+            return Response(data=serializer_data.data,status=status.HTTP_200_OK)
+        return Response(data={"message":"Cart is empty"},status=status.HTTP_404_NOT_FOUND)

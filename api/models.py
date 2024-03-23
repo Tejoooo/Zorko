@@ -55,3 +55,8 @@ class Restaurants(models.Model):
     longitude = models.FloatField(null=False,blank=False)
     lattitude = models.FloatField(null=False,blank=False)
     
+class CartItem(models.Model):
+    user = models.ForeignKey(UserDetails, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
