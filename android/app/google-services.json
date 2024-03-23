@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "977257696058",
+    "project_id": "zorko-16437",
+    "storage_bucket": "zorko-16437.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977257696058:android:422df49b144360b9725e03",
+        "android_client_info": {
+          "package_name": "com.example.zorko"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAd9P4rt9SHYb1NVoF68tUg1OPDig1zWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
