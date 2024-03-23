@@ -6,7 +6,14 @@ class UserDetailsSerializer(serializers.ModelSerializer):
         model = UserDetails
         fields = '__all__'
         
+        
+class UserDetailsSerializerForPost(serializers.ModelSerializer):
+    class Meta:
+        model = UserDetails
+        fields = ['id','name','profilepic']
+
 class PostsSerializer(serializers.ModelSerializer):
+    userDetails = UserDetailsSerializerForPost()
     class Meta:
         model = Posts
         fields = '__all__'

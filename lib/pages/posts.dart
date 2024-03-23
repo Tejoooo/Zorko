@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, must_be_immutable
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
+
+import '../models/postsmodel.dart';
 
 class Posts extends StatefulWidget {
   const Posts({super.key});
@@ -15,11 +19,16 @@ class Posts extends StatefulWidget {
 
 class _PostsState extends State<Posts> {
 
+  List<Post> fetchedPosts = [];
+
   void _init() async {
     const apiURL = backendURL + "api/posts/";
     final response = await http.get(Uri.parse(apiURL));
     if (response.statusCode == 200) {
-      debugPrint(response.body);
+      final List<dynamic> jsonData = jsonDecode(response.body);
+      setState(() {
+        fetchedPosts = jsonData.map((data) => Post.fromJson(data)).toList();
+      });
     } else {
       ErrorSnackBar(context, "Looks like something went wrong");
     } 
@@ -42,22 +51,7 @@ class _PostsState extends State<Posts> {
                 height: 12,
               ),
               Column(
-                children: [
-                  PostComponent(
-                    PostURL: "assets/post1.png",
-                    ProfileImage: "assets/profile.png",
-                    ProfileName: "CB Praveen",
-                    text:
-                        "Food is very necessary in our daily life. Today we had a very delicious Alfredo cheese pasta and it tastes like heaven and very one should try this item from Zoroko.",
-                  ),
-                  PostComponent(
-                    PostURL: "assets/post2.png",
-                    ProfileImage: "assets/profile.png",
-                    ProfileName: "Marvis Ighedosa",
-                    text:
-                        "Food is very necessary in our daily life. Today we had a very delicious Alfredo cheese pasta and it tastes like heaven and very one should try this item from Zoroko.",
-                  ),
-                ],
+                children: fetchedPosts.map((post) => PostComponent(PostURL: post.image,ProfileImage: post.userDetails.profileImage,ProfileName: post.userDetails.username,text: post.description,)).toList(),
               )
             ],
           ),
@@ -92,7 +86,7 @@ class PostComponent extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 15.0),
                   child: Row(
                     children: [
-                      Image(image: AssetImage(ProfileImage)),
+                      Image(image: NetworkImage(backendURL+ProfileImage)),
                       SizedBox(
                         width: 10,
                       ),
@@ -108,7 +102,7 @@ class PostComponent extends StatelessWidget {
                   height: 10,
                 ),
                 Image(
-                  image: AssetImage(PostURL),
+                    image: NetworkImage(backendURL+ PostURL),
                 ),
                 SizedBox(
                   height: 10,
