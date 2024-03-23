@@ -87,6 +87,7 @@ class _ScreensState extends State<Screens> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Add your onPressed logic here
+                      Navigator.pushNamed(context, "/login");
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,

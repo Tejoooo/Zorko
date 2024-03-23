@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DrawerWt extends StatefulWidget {
   const DrawerWt({super.key});
@@ -39,8 +41,9 @@ class _DrawerWtState extends State<DrawerWt> {
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
-            onTap: () {
+            onTap: () async{
               // Handle drawer item tap for Logout
+              await FirebaseAuth.instance.signOut();
             },
           ),
         ],

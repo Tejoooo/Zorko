@@ -6,6 +6,7 @@ class FoodItem {
   String? description;
   double? price;
   int? likes;
+  String? image;
   List<String>? Comments;
 
 
@@ -14,6 +15,7 @@ class FoodItem {
     this.description,
     this.price,
     this.likes,
+    this.image,
     this.Comments,
   });
 }

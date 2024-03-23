@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:zorko/components/itemdisplay.dart';
 
 class FoodList extends StatefulWidget {
-  const FoodList({super.key});
+  String foodName;
+  FoodList({super.key,required this.foodName});
 
   @override
   State<FoodList> createState() => _FoodListState();
@@ -19,7 +20,7 @@ class _FoodListState extends State<FoodList> {
         Padding(
           padding: const EdgeInsets.only(left: 20,top: 5),
           child: Text(
-            'Food',
+            widget.foodName,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,

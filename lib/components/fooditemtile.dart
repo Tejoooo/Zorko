@@ -30,6 +30,7 @@ class FoodItemTile extends StatelessWidget {
               color: Colors.grey,
               borderRadius: BorderRadius.circular(8),
             ),
+            child: Image(image: AssetImage(foodItem.image ?? 'assets/h5.png')),
             // You can display an image here if you have one in your FoodItem model
             // child: Image.network(foodItem.imageUrl), // Example if imageUrl is a property in your FoodItem model
           ),

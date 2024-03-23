@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:zorko/components/bottomnavigationbar.dart';
+import 'package:zorko/components/fooditemtile.dart';
+import 'package:zorko/models/fooditems.dart';
+import 'package:zorko/pages/Details.dart';
+import 'package:zorko/pages/fooditemspage.dart';
 import 'package:zorko/pages/home.dart';
 import 'package:zorko/pages/posts.dart';
 import 'package:zorko/components/drawer.dart';
@@ -31,6 +35,9 @@ class _AppHomeState extends State<AppHome> {
     _pages = [
       Home(),
       Posts(),
+      Posts(),
+      FoodItemPage(),
+      DetailsPage()
     ];
   }
 
@@ -72,6 +79,7 @@ class _AppHomeState extends State<AppHome> {
         child: Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
+            flexibleSpace: Container(decoration: BoxDecoration(gradient: LinearGradient(colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],begin: Alignment.centerLeft,end: Alignment.centerRight),),),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),

@@ -95,6 +95,46 @@ class FoodIteamView extends StatelessWidget {
                 Text(foodData['description'])
               ],
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                        height: 40,
+                        width: 150,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(100), // Set the border radius
+                            color: Color(
+                                0xFFEF7931), // Set the background color to EF7931
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Add your onPressed logic here
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.transparent,
+                              padding:
+                                  EdgeInsets.all(8), // Adjust padding as needed
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    50), // Adjust the border radius as needed
+                              ),
+                              elevation: 0, // Set text color
+                            ),
+                            child: Text(
+                              'Add to Cart',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
+                      ),
+            ],
           )
         ],
       ),
