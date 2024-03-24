@@ -141,3 +141,17 @@ class MenuView(APIView):
         serialzer_data = ItemSerializer(allObjects,many=True)
         return Response(data=serialzer_data.data,status=status.HTTP_200_OK)
     
+class OrderView(APIView):
+    def post(self,request):
+        userID = request.data.get('userID')
+        user = UserDetails.objects.filter(userID=userID).first()
+        cartItems = CartItem.objects.filter(user=user)
+        if not cartItems:
+            return Response(data={"message":"Cart is empty"},status=status.HTTP_404_NOT_FOUND)
+        total = 0
+        for cartItem in cartItems:
+            total += cartItem.item.price * cartItem.quantity
+        user.coins += total*0.1
+        user.save()
+        cartItems.delete()
+        return Response(data={"total":total},status=status.HTTP_200_OK)

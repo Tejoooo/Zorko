@@ -12,5 +12,6 @@ urlpatterns = [
     path('cart/',views.CartView.as_view(),name='Cart View'),
     path('home_items/',views.HomeItemsView.as_view(),name='Home Items View'),
     path('outlets/',views.Outlets.as_view(),name='Outlets'),
-    path('menu/',views.MenuView.as_view(),name='Menu View')
+    path('menu/',views.MenuView.as_view(),name='Menu View'),
+    path('order/',views.OrderView.as_view(),name='Order View'),
 ]

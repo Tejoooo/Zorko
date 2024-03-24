@@ -20,6 +20,8 @@ class _CartPageState extends State<CartPage> {
   List<FoodItem> items = [];
   bool isLoading = false;
 
+  
+
   void _init() async {
     setState(() {
       isLoading = true;
@@ -48,13 +50,27 @@ class _CartPageState extends State<CartPage> {
         }
         setState(() {
           items = dup;
-          isLoading = false;
         });
       } else if (response.statusCode == 404) {
       } else {
         ErrorSnackBar(context, "unable to fetch cart items");
       }
+      setState(() {
+        isLoading = false;
+      });
+
     }
+  }
+
+  double calculatedTotal() {
+    double total = 0;
+    for (var i = 0; i < items.length; i++) {
+      double a = items[i].price!.toDouble();
+      double b = items[i].count!.toDouble();
+
+      total += a * b;
+    }
+    return total;
   }
 
   @override
@@ -77,7 +93,35 @@ class _CartPageState extends State<CartPage> {
               Center(child: CircularProgressIndicator()),
             ],
           ): Column(
-            children: items.map((item) => FoodItemTile(foodItem: item)).toList(),
+            children: [
+              Column(
+                children: items.map((item) => FoodItemTile(foodItem: item)).toList(),
+              ),
+              SizedBox(height: 30,),
+              Text("Total: ${calculatedTotal().toString()}"),
+              SizedBox(height: 20,),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/upload");
+                },
+                child: ElevatedButton(onPressed: () async{
+                  User? user = await FirebaseAuth.instance.currentUser;
+                  if (user != null) {
+                    String? uid = user.uid;
+                    String apiURL = backendURL + "api/order/";
+                    final response = await http.post(Uri.parse(apiURL), body: {
+                      "userID": uid,
+                    });
+                    if (response.statusCode == 200) {
+                      Navigator.pop(context);
+                    } else {
+                      ErrorSnackBar(context, "unable to place order");
+                    }
+                  }
+                },child: Text("Buy Now")),
+              ),
+              SizedBox(height: 80,),
+            ],
           ),
         ),
       ),

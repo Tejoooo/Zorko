@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:zorko/components/redeembox.dart';
@@ -22,7 +24,6 @@ class _RewardsPageState extends State<RewardsPage> {
           children: [
             // Background image
             Positioned(
-
               top: -200, // Move the circle up by adjusting this value
               left: -100, // Optional: Adjust left position if needed
               child: Container(
@@ -61,27 +62,38 @@ class _RewardsPageState extends State<RewardsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     // Carousel Slider
-                    SizedBox(height: 80,),
+                    SizedBox(
+                      height: 80,
+                    ),
                     Container(
                       decoration: BoxDecoration(),
                       child: Image.asset('assets/h15.png'),
                     ),
-                    SizedBox(height: 50,),
-                    Text('REWARDS', style: TextStyle(
-                    fontSize: 54.0,
-                    fontWeight: FontWeight.bold,
-                    foreground: Paint()
-                      ..style = PaintingStyle.stroke
-                      ..strokeWidth = 1.2
-                      ..color = Colors.black54,
-                  // color: Colors.red,
-                  ),),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Text(
+                      'REWARDS',
+                      style: TextStyle(
+                        fontSize: 54.0,
+                        fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 1.2
+                          ..color = Colors.black54,
+                        // color: Colors.red,
+                      ),
+                    ),
                     Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            RewardCard(rewardName: "burger", rewardDescription: "5%", rewardImage: "assets/h16.jpg", rewardPoints: 10),
+                            RewardCard(
+                                rewardName: "burger",
+                                rewardDescription: "5%",
+                                rewardImage: "assets/h16.jpg",
+                                rewardPoints: 10),
                             // RewardCard(rewardName: "pizza", rewardDescription: "5%", rewardImage: "assets/h5.png", rewardPoints: 200),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,24 +102,37 @@ class _RewardsPageState extends State<RewardsPage> {
                                 // ElevatedButton(onPressed: null, child: Text('Redeem')),
                               ],
                             )
-                          
                           ],
                         ),
-                                            SizedBox(height: 20,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RewardCard(rewardName: "drinks", rewardDescription: "5%", rewardImage: "assets/h16.jpg", rewardPoints: 200),
-                            // RewardCard(rewardName: "cokes", rewardDescription: "5%", rewardImage: "assets/h5.png", rewardPoints: 200),
-                          ],
+                        SizedBox(
+                          height: 30,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            RewardCard(rewardName: "drinks", rewardDescription: "5%", rewardImage: "assets/h16.jpg", rewardPoints: 200),
+                            RewardCard(
+                                rewardName: "drinks",
+                                rewardDescription: "5%",
+                                rewardImage: "assets/h18.jpeg",
+                                rewardPoints: 200),
                             // RewardCard(rewardName: "cokes", rewardDescription: "5%", rewardImage: "assets/h5.png", rewardPoints: 200),
                           ],
                         ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RewardCard(
+                                rewardName: "drinks",
+                                rewardDescription: "5%",
+                                rewardImage: "assets/h17.jpg",
+                                rewardPoints: 200),
+                            // RewardCard(rewardName: "cokes", rewardDescription: "5%", rewardImage: "assets/h5.png", rewardPoints: 200),
+                          ],
+                        ),
+                        SizedBox(height: 70,),
                       ],
                     ),
                   ],
