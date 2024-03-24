@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zorko/firebase_options.dart';
+import 'package:zorko/pages/ImagePicker.dart';
 import 'package:zorko/pages/appHome.dart';
 import 'package:zorko/pages/cartPage.dart';
 import 'package:zorko/pages/foodView.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         "/login" : (context) => OTPScreen(),
         "/foodView":(context) => FoodIteamView(),
         "/cart":(context) => CartPage(),
+        "/upload":(context) => ImagePickerWidget(),
       },
     );
   }

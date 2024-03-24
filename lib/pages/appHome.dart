@@ -44,36 +44,33 @@ class _AppHomeState extends State<AppHome> {
     });
   }
 
-
-  void _init() async{
+  void _init() async {
     User? user = FirebaseAuth.instance.currentUser;
-    if(user != null){
+    if (user != null) {
       String? token = user.uid;
       String apiURL = backendURL + "api/user/";
       if (token != null) {
         apiURL = apiURL + "?userID=" + token;
       }
-      final response = await http.get(
-        Uri.parse(apiURL)
-      );
-      if (response.statusCode == 200){
+      final response = await http.get(Uri.parse(apiURL));
+      if (response.statusCode == 200) {
         setRegistered(true);
         fetchUserDetails(token);
       }
     }
   }
 
-  void fetchUserDetails(String token) async{
-    String apiURL = backendURL + "api/user/"+ "?userID=" + token;
+  void fetchUserDetails(String token) async {
+    String apiURL = backendURL + "api/user/" + "?userID=" + token;
     final response = await http.get(Uri.parse(apiURL));
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       print(data);
       setState(() {
         coins = data['coins'].toString();
         print(coins);
       });
-    } else{
+    } else {
       ErrorSnackBar(context, "user details unable to fetch");
     }
   }
@@ -100,108 +97,141 @@ class _AppHomeState extends State<AppHome> {
 
   @override
   Widget build(BuildContext context) {
-    return !isRegistered? DetailsPage(setRegistered: setRegistered,): WillPopScope(
-        onWillPop: () async {
-          if (_currentIndex != 0) {
-            setState(() {
-              _currentIndex = 0;
-            });
-            return Future(() => false);
-          }
-          bool res = await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Warning'),
-              content: const Text('Do you really want to exit'),
-              actions: [
-                TextButton(
-                  child: const Text('Yes'),
-                  onPressed: () => Navigator.pop(context, true),
+    return !isRegistered
+        ? DetailsPage(
+            setRegistered: setRegistered,
+          )
+        : WillPopScope(
+            onWillPop: () async {
+              if (_currentIndex != 0) {
+                setState(() {
+                  _currentIndex = 0;
+                });
+                return Future(() => false);
+              }
+              bool res = await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Warning'),
+                  content: const Text('Do you really want to exit'),
+                  actions: [
+                    TextButton(
+                      child: const Text('Yes'),
+                      onPressed: () => Navigator.pop(context, true),
+                    ),
+                    TextButton(
+                      child: const Text('No'),
+                      onPressed: () => Navigator.pop(context, false),
+                    ),
+                  ],
                 ),
-                TextButton(
-                  child: const Text('No'),
-                  onPressed: () => Navigator.pop(context, false),
+              );
+              return Future.value(res);
+            },
+            child: Scaffold(
+              key: _scaffoldKey,
+              appBar: AppBar(
+                flexibleSpace: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight),
+                  ),
                 ),
-              ],
+                leading: IconButton(
+                  icon: Icon(Icons.menu),
+                  onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                ),
+                actions: [
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.shopping_cart),
+                        onPressed: () {
+                          // Navigate to cart screen or show cart items
+                          Navigator.pushNamed(context, "/cart");
+                        },
+                      ),
+                      SizedBox(width: 10), // Add some spacing between icons
+                      Icon(Icons.monetization_on),
+                      SizedBox(width: 5),
+                      Text(coins), // Display user's coins
+                      SizedBox(width: 10), // Add some spacing between icons
+                    ],
+                  ),
+                ],
+              ),
+              drawer: DrawerWt(),
+              body: _pages[_currentIndex],
+              bottomNavigationBar: Container(
+                height: 66,
+                padding: const EdgeInsets.all(9),
+                // margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 22),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(24)),
+                  color: Colors.transparent,
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.black.withOpacity(0.3),
+                  //     blurRadius: 20,
+                  //     offset: Offset(0, -3),
+                  //   ),
+                  // ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.home,
+                          color:
+                              _currentIndex == 0 ? Colors.blue : Colors.grey),
+                      onPressed: () => _onItemTapped(0),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.favorite,
+                          color:
+                              _currentIndex == 1 ? Colors.blue : Colors.grey),
+                      onPressed: () => _onItemTapped(1),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.grid_on,
+                          color:
+                              _currentIndex == 2 ? Colors.blue : Colors.grey),
+                      onPressed: () => _onItemTapped(2),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.shopping_cart,
+                          color:
+                              _currentIndex == 3 ? Colors.blue : Colors.grey),
+                      onPressed: () => _onItemTapped(3),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.person,
+                          color:
+                              _currentIndex == 4 ? Colors.blue : Colors.grey),
+                      onPressed: () => _onItemTapped(4),
+                    ),
+                  ],
+                ),
+              ),
+              floatingActionButton: _currentIndex == 2
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        // Your action here
+                        Navigator.pushNamed(context, "/upload");
+                      },
+                      child: Icon(Icons.add,size: 32,),
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white, // Set foreground color
+                      elevation: 0, // Set elevation to 0 to remove shadow
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // Set border radius
+                      ),
+                    )
+                  : null,
             ),
           );
-          return Future.value(res);
-        },
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(
-            flexibleSpace: Container(decoration: BoxDecoration(gradient: LinearGradient(colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],begin: Alignment.centerLeft,end: Alignment.centerRight),),),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        ),
-        actions: [
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  // Navigate to cart screen or show cart items
-                  Navigator.pushNamed(context, "/cart");
-                },
-              ),
-              SizedBox(width: 10), // Add some spacing between icons
-              Icon(Icons.monetization_on),
-              SizedBox(width: 5),
-              Text(coins), // Display user's coins
-              SizedBox(width: 10), // Add some spacing between icons
-            ],
-          ),
-        ],
-      ),
-      drawer: DrawerWt(),
-          body: _pages[_currentIndex],
-          bottomNavigationBar: Container(
-            height: 66, 
-            padding: const EdgeInsets.all(9),
-            // margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 22),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(24)),
-              color: Colors.transparent,
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.black.withOpacity(0.3),
-              //     blurRadius: 20,
-              //     offset: Offset(0, -3),
-              //   ),
-              // ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.home,
-                      color: _currentIndex == 0 ? Colors.blue : Colors.grey),
-                  onPressed: () => _onItemTapped(0),
-                ),
-                IconButton(
-                  icon: Icon(Icons.favorite,
-                      color: _currentIndex == 1 ? Colors.blue : Colors.grey),
-                  onPressed: () => _onItemTapped(1),
-                ),
-                IconButton(
-                  icon: Icon(Icons.grid_on,
-                      color: _currentIndex == 2 ? Colors.blue : Colors.grey),
-                  onPressed: () => _onItemTapped(2),
-                ),
-                IconButton(
-                  icon: Icon(Icons.shopping_cart,
-                      color: _currentIndex == 3 ? Colors.blue : Colors.grey),
-                  onPressed: () => _onItemTapped(3),
-                ),
-                IconButton(
-                  icon: Icon(Icons.person,
-                      color: _currentIndex == 4 ? Colors.blue : Colors.grey),
-                  onPressed: () => _onItemTapped(4),
-                ),
-              ],
-            ),
-          ),
-        ));
   }
 }

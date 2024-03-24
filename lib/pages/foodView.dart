@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zorko/constants.dart';
 
 class FoodIteamView extends StatelessWidget {
   const FoodIteamView({super.key});
@@ -65,7 +66,7 @@ class FoodIteamView extends StatelessWidget {
                     height: 40,
                   ),
                   Image(
-                    image: AssetImage(foodData['image']),
+                    image: NetworkImage(backendURL+ foodData['image']),
                     height: 250,
                   )
                 ],

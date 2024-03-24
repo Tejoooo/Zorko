@@ -18,6 +18,16 @@ class PostsSerializer(serializers.ModelSerializer):
         model = Posts
         fields = '__all__'
         
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Posts
+        fields = '__all__'
+        
+class PostSerializerForUploading(serializers.ModelSerializer):
+    class Meta:
+        model = Posts
+        fields = "__all__"        
+
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item

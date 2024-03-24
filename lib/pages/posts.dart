@@ -86,7 +86,7 @@ class PostComponent extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 15.0),
                   child: Row(
                     children: [
-                      Image(image: NetworkImage(backendURL+ProfileImage)),
+                      Container(child: ClipOval(child: Image(image: NetworkImage(backendURL+ProfileImage),fit:BoxFit.cover,),),width: 35,height: 35,decoration: BoxDecoration(shape: BoxShape.circle),),
                       SizedBox(
                         width: 10,
                       ),
@@ -103,6 +103,8 @@ class PostComponent extends StatelessWidget {
                 ),
                 Image(
                     image: NetworkImage(backendURL+ PostURL),
+                    fit: BoxFit.contain,
+                    width: double.maxFinite,
                 ),
                 SizedBox(
                   height: 10,

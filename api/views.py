@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from .models import UserDetails,Posts,Item,CartItem
-from .serializers import UserDetailsSerializer,PostsSerializer,ItemSerializer,CartItemSerializer
+from .serializers import UserDetailsSerializer,PostsSerializer,ItemSerializer,CartItemSerializer,PostSerializer
 import json
 
 
@@ -38,10 +38,11 @@ class PostsView(APIView):
         userDetails = UserDetails.objects.get(userID=userID)
         requestData = request.data
         requestData['userDetails'] = userDetails.id
-        post_serializer = PostsSerializer(data=requestData,context={'userDetails':userDetails})
+        post_serializer = PostSerializer(data=requestData)
         if post_serializer.is_valid():
             post_serializer.save()
             return Response(data=post_serializer.data,status=status.HTTP_201_CREATED)
+        print(post_serializer.errors)
         return Response(data=post_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
 class LikeView(APIView):
