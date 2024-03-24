@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
 import 'package:zorko/models/fooditems.dart';
@@ -69,17 +70,29 @@ class _FoodItemTileState extends State<FoodItemTile> {
       ),
       child: Row(
         children: <Widget>[
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(8),
+          GestureDetector(
+            onTap: (){
+              Map<String, dynamic> foodData = {
+                            "name": widget.foodItem.name,
+                            "image": widget.foodItem.image,
+                            "price": widget.foodItem.price,
+                            "description":widget.foodItem.description
+                          };
+                          Navigator.pushNamed(context, "/foodView",
+                              arguments: foodData);
+            },
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child:
+                  Image(image: NetworkImage(backendURL + (widget.foodItem.image ?? ''))),
+              // You can display an image here if you have one in your FoodItem model
+              // child: Image.network(foodItem.imageUrl), // Example if imageUrl is a property in your FoodItem model
             ),
-            child:
-                Image(image: NetworkImage(backendURL + (widget.foodItem.image ?? ''))),
-            // You can display an image here if you have one in your FoodItem model
-            // child: Image.network(foodItem.imageUrl), // Example if imageUrl is a property in your FoodItem model
           ),
           const SizedBox(width: 16),
           Expanded(

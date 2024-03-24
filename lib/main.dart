@@ -7,6 +7,7 @@ import 'package:zorko/pages/appHome.dart';
 import 'package:zorko/pages/cartPage.dart';
 import 'package:zorko/pages/foodView.dart';
 import 'package:zorko/pages/otpscreen.dart';
+import 'package:zorko/pages/rewards.dart';
 import 'package:zorko/repository/authentication_repository.dart';
 import 'pages/splashScreen.dart';
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         "/foodView":(context) => FoodIteamView(),
         "/cart":(context) => CartPage(),
         "/upload":(context) => ImagePickerWidget(),
+        "/rewards":(context) => RewardsPage(),
       },
     );
   }

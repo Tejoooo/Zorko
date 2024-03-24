@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:zorko/components/bottomnavigationbar.dart';
+import 'package:zorko/components/filter.dart';
 import 'package:zorko/components/fooditemtile.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
@@ -82,8 +83,8 @@ class _AppHomeState extends State<AppHome> {
     _pages = [
       Home(),
       HeatMaps(),
+      FilteredItemsPage(),
       Posts(),
-      FoodItemPage(),
       MyProfile(),
     ];
     _init();
@@ -166,18 +167,10 @@ class _AppHomeState extends State<AppHome> {
               body: _pages[_currentIndex],
               bottomNavigationBar: Container(
                 height: 66,
-                padding: const EdgeInsets.all(9),
-                // margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 22),
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(24)),
                   color: Colors.transparent,
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.black.withOpacity(0.3),
-                  //     blurRadius: 20,
-                  //     offset: Offset(0, -3),
-                  //   ),
-                  // ],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -189,19 +182,19 @@ class _AppHomeState extends State<AppHome> {
                       onPressed: () => _onItemTapped(0),
                     ),
                     IconButton(
-                      icon: Icon(Icons.favorite,
+                      icon: Icon(Icons.pin_drop,
                           color:
                               _currentIndex == 1 ? Colors.blue : Colors.grey),
                       onPressed: () => _onItemTapped(1),
                     ),
                     IconButton(
-                      icon: Icon(Icons.grid_on,
+                      icon: Icon(Icons.add,size: 40,
                           color:
                               _currentIndex == 2 ? Colors.blue : Colors.grey),
                       onPressed: () => _onItemTapped(2),
                     ),
                     IconButton(
-                      icon: Icon(Icons.shopping_cart,
+                      icon: Icon(Icons.grid_on,
                           color:
                               _currentIndex == 3 ? Colors.blue : Colors.grey),
                       onPressed: () => _onItemTapped(3),
@@ -215,7 +208,7 @@ class _AppHomeState extends State<AppHome> {
                   ],
                 ),
               ),
-              floatingActionButton: _currentIndex == 2
+              floatingActionButton: _currentIndex == 3
                   ? FloatingActionButton(
                       onPressed: () {
                         // Your action here

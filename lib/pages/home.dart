@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:zorko/components/filter.dart';
 import 'package:zorko/components/list.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
@@ -58,43 +57,87 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // _init();
-          return  Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FilteredItemsPage()
-          );
-    // return Padding(
-    //   padding: const EdgeInsets.all(10.0),
-    //   child: SingleChildScrollView(
-    //     scrollDirection: Axis.vertical,
-    //     child: Column(
-    //       children: [
-    //         SizedBox(
-    //           height: 10,
-    //         ),
-    //           // Column(
-    //           //   children: [
-    //           //     SizedBox(
-    //           //       height: 10,
-    //           //     ),
-    //           //     Container(
-    //           //       height: 200,
-    //           //       padding: EdgeInsets.all(15),
-    //           //       width: MediaQuery.of(context).size.width,
-    //           //       decoration: BoxDecoration(
-    //           //         color: Colors.orange[300],
-    //           //         image: DecorationImage(
-    //           //             image: AssetImage('assets/h8.png'),
-    //           //             fit: BoxFit.cover),
-    //           //         borderRadius: BorderRadius.circular(13),
-    //           //       ),
-    //           //     ),
-    //           //     TotalMenu(categoriesMenu),
-    //           //   ],
-    //           // ),
-    //       ],
-    //     ),
-    //   ),
-    // );
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Positioned(
+              top: 100,
+              left: 0,
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(15),
+                    width: MediaQuery.of(context).size.width,
+                    child: SearchAnchor(builder:
+                        (BuildContext context, SearchController controller) {
+                      return SearchBar(
+                        controller: controller,
+                        padding: const MaterialStatePropertyAll<EdgeInsets>(
+                            EdgeInsets.symmetric(horizontal: 16.0)),
+                        onTap: () {
+                          controller.openView();
+                        },
+                        onChanged: (_) {
+                          controller.openView();
+                        },
+                        leading: const Icon(Icons.search),
+                        trailing: <Widget>[
+                          const SizedBox(width: 8),
+                          Tooltip(
+                            message: 'Filter',
+                            child: IconButton(
+                              onPressed: () {
+                                // Handle filter button press
+                              },
+                              icon: const Icon(Icons.filter_list),
+                            ),
+                          )
+                        ],
+                      );
+                    }, suggestionsBuilder:
+                        (BuildContext context, SearchController controller) {
+                      return List<ListTile>.generate(5, (int index) {
+                        final String item = 'item $index';
+                        return ListTile(
+                          title: Text(item),
+                          onTap: () {
+                            setState(() {
+                              controller.closeView(item);
+                            });
+                          },
+                        );
+                      });
+                    }),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 200,
+                    padding: EdgeInsets.all(15),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.orange[300],
+                      image: DecorationImage(
+                          image: AssetImage('assets/h8.png'),
+                          fit: BoxFit.cover),
+                      borderRadius: BorderRadius.circular(13),
+                    ),
+                  ),
+                  TotalMenu(categoriesMenu),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
