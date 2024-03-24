@@ -18,8 +18,12 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   List<FoodItem> items = [];
+  bool isLoading = false;
 
   void _init() async {
+    setState(() {
+      isLoading = true;
+    });
     User? user = await FirebaseAuth.instance.currentUser;
     if (user != null) {
       String? uid = user.uid;
@@ -44,6 +48,7 @@ class _CartPageState extends State<CartPage> {
         }
         setState(() {
           items = dup;
+          isLoading = false;
         });
       } else if (response.statusCode == 404) {
       } else {
@@ -65,7 +70,13 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(),
       body: SingleChildScrollView(
         child: Container(
-          child: Column(
+          child: isLoading ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(child: CircularProgressIndicator()),
+            ],
+          ): Column(
             children: items.map((item) => FoodItemTile(foodItem: item)).toList(),
           ),
         ),

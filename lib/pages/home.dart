@@ -21,11 +21,15 @@ class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Map<String, List<Item>> categoriesMenu = {};
+  bool isLoading = false;
 
   int userCoins = 100;
   bool isDark = false;
 
   void _init() async {
+    setState(() {
+      isLoading = true;
+    });
     const apiURL = backendURL + 'api/home_items/';
     final response = await http.get(Uri.parse(apiURL));
     if (response.statusCode == 200) {
@@ -41,6 +45,7 @@ class _HomeState extends State<Home> {
       }
       setState(() {
         categoriesMenu = dup1;
+        isLoading = false;
       });
     } else {
       ErrorSnackBar(context, "Failed to load data. Please try again later.");
@@ -130,6 +135,10 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(13),
                     ),
                   ),
+                  isLoading ? Padding(
+                    padding: const EdgeInsets.only(top:60),
+                    child: Center(child: CircularProgressIndicator()),
+                  ):
                   TotalMenu(categoriesMenu),
                 ],
               ),

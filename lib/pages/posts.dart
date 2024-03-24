@@ -20,14 +20,19 @@ class Posts extends StatefulWidget {
 class _PostsState extends State<Posts> {
 
   List<Post> fetchedPosts = [];
+  bool isLoading = false;
 
   void _init() async {
+    setState(() {
+      isLoading = true;
+    });
     const apiURL = backendURL + "api/posts/";
     final response = await http.get(Uri.parse(apiURL));
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = jsonDecode(response.body);
       setState(() {
         fetchedPosts = jsonData.map((data) => Post.fromJson(data)).toList();
+        isLoading = false;
       });
     } else {
       ErrorSnackBar(context, "Looks like something went wrong");
@@ -45,7 +50,10 @@ class _PostsState extends State<Posts> {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Column(
+          child: isLoading ? Padding(
+            padding: const EdgeInsets.only(top:80.0),
+            child: Center(child: CircularProgressIndicator()),
+          ) : Column(
             children: [
               SizedBox(
                 height: 12,
