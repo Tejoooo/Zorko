@@ -14,6 +14,8 @@ class RewardsPage extends StatefulWidget {
 class _RewardsPageState extends State<RewardsPage> {
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> data =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('Rewards'),
@@ -72,6 +74,9 @@ class _RewardsPageState extends State<RewardsPage> {
                     SizedBox(
                       height: 50,
                     ),
+                    Text("Zorko coins blance: ${data['coins']}",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                     Text(
                       'REWARDS',
                       style: TextStyle(

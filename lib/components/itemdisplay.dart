@@ -138,7 +138,8 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
                                     count++;
                                   });
                                 } else{
-                                  ErrorSnackBar(context, "Operation not done");
+                                  // ErrorSnackBar(context, "Operation not done");
+                                  debugPrint("Operation not done");
                                 }
                               },
                               style: ElevatedButton.styleFrom(

@@ -155,3 +155,15 @@ class OrderView(APIView):
         user.save()
         cartItems.delete()
         return Response(data={"total":total},status=status.HTTP_200_OK)
+    
+class RedeemView(APIView):
+    def post(self,request):
+        userID = request.data.get('userID')
+        value = request.data.get('value')
+        user = UserDetails.objects.filter(userID=userID).first()
+        if value < user.coins:
+            user.coins -= value
+            user.save()
+            return Response(data={"message":"Redeemed"},status=status.HTTP_200_OK)
+        else:
+            return Response(data={"message":"Not enough coins"},status=status.HTTP_400_BAD_REQUEST) 

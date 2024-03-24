@@ -44,6 +44,7 @@ class _AppHomeState extends State<AppHome> {
       isRegistered = val;
     });
   }
+  
 
   void _init() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -61,12 +62,19 @@ class _AppHomeState extends State<AppHome> {
     }
   }
 
+  void updateCoins() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String? token = user.uid;
+      fetchUserDetails(token);
+    }
+  }
+
   void fetchUserDetails(String token) async {
     String apiURL = backendURL + "api/user/" + "?userID=" + token;
     final response = await http.get(Uri.parse(apiURL));
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
-      print(data);
       setState(() {
         coins = data['coins'].toString();
         print(coins);
@@ -155,7 +163,12 @@ class _AppHomeState extends State<AppHome> {
                         },
                       ),
                       SizedBox(width: 10), // Add some spacing between icons
-                      IconButton(onPressed: (){Navigator.pushNamed(context, "/rewards");}, icon: Icon(Icons.monetization_on)),
+                      IconButton(onPressed: () {
+                        Map<String,dynamic> data = {
+                        "coins":coins,
+                        "userID":FirebaseAuth.instance.currentUser!.uid,
+                      };
+                        Navigator.pushNamed(context, "/rewards",arguments: data);updateCoins();}, icon: Icon(Icons.monetization_on)),
                       SizedBox(width: 5),
                       Text(coins), // Display user's coins
                       SizedBox(width: 10), // Add some spacing between icons
