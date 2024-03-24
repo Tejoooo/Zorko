@@ -11,7 +11,8 @@ import 'package:zorko/models/Itemmodel.dart';
 import 'package:zorko/models/fooditems.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  Function setIndex;
+  Home({super.key, required this.setIndex});
 
   @override
   State<Home> createState() => _HomeState();
@@ -123,11 +124,11 @@ class _HomeState extends State<Home> {
                         padding: const MaterialStatePropertyAll<EdgeInsets>(
                             EdgeInsets.symmetric(horizontal: 16.0)),
                         onTap: () {
-                          controller.openView();
+                          // controller.openView();
                         },
-                        onChanged: (_) {
-                          controller.openView();
-                        },
+                        // onChanged: (_) {
+                        //   controller.openView();
+                        // },
                         leading: const Icon(Icons.search),
                         trailing: <Widget>[
                           const SizedBox(width: 8),
@@ -161,7 +162,7 @@ class _HomeState extends State<Home> {
                     height: 10,
                   ),
                   Container(
-                    height: 200,
+                    height: 250,
                     padding: EdgeInsets.all(15),
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -172,11 +173,15 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(13),
                     ),
                   ),
-                  isLoading ? Padding(
-                    padding: const EdgeInsets.only(top:60),
-                    child: Center(child: CircularProgressIndicator()),
-                  ):
-                  TotalMenu(categoriesMenu),
+                  isLoading
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 60),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      : TotalMenu(categoriesMenu),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
@@ -191,7 +196,8 @@ Widget TotalMenu(Map<String, List> categoriesMenu) {
   List<Widget> columns = [];
   categoriesMenu.forEach((category, items) {
     columns.add(SizedBox(height: 10));
-    columns.add(FoodList(foodName:category,items:items.cast<Item>()));
+    columns.add(
+        FoodList(foodName: category.toUpperCase(), items: items.cast<Item>()));
   });
   return Column(
     children: columns,

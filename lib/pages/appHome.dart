@@ -81,7 +81,7 @@ class _AppHomeState extends State<AppHome> {
     super.initState();
 
     _pages = [
-      Home(),
+      Home(setIndex: setIndex,),
       HeatMaps(),
       FilteredItemsPage(),
       Posts(),
@@ -155,7 +155,7 @@ class _AppHomeState extends State<AppHome> {
                         },
                       ),
                       SizedBox(width: 10), // Add some spacing between icons
-                      Icon(Icons.monetization_on),
+                      IconButton(onPressed: (){Navigator.pushNamed(context, "/rewards");}, icon: Icon(Icons.monetization_on)),
                       SizedBox(width: 5),
                       Text(coins), // Display user's coins
                       SizedBox(width: 10), // Add some spacing between icons

@@ -1,1 +1,1 @@
-const backendURL = "https://designers-worn-slovakia-statement.trycloudflare.com/";
+const backendURL = "https://void-trades-participant-fate.trycloudflare.com/";

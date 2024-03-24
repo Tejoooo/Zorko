@@ -5,6 +5,7 @@ import 'package:zorko/firebase_options.dart';
 import 'package:zorko/pages/ImagePicker.dart';
 import 'package:zorko/pages/appHome.dart';
 import 'package:zorko/pages/cartPage.dart';
+import 'package:zorko/pages/contact.dart';
 import 'package:zorko/pages/foodView.dart';
 import 'package:zorko/pages/otpscreen.dart';
 import 'package:zorko/pages/rewards.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowMaterialGrid: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 238, 151, 22)),
         useMaterial3: true,
       ),
       initialRoute: "/splash",
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
         "/cart":(context) => CartPage(),
         "/upload":(context) => ImagePickerWidget(),
         "/rewards":(context) => RewardsPage(),
+        "/contact":(context) => ContactPage(),
+        "/home" : (context) => AppHome(),
       },
     );
   }

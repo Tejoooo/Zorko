@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -69,7 +70,7 @@ class _PostsState extends State<Posts> {
   }
 }
 
-class PostComponent extends StatelessWidget {
+class PostComponent extends StatefulWidget {
   String PostURL;
   String text;
   String ProfileImage;
@@ -81,6 +82,13 @@ class PostComponent extends StatelessWidget {
       required this.ProfileImage,
       required this.ProfileName});
 
+  @override
+  State<PostComponent> createState() => _PostComponentState();
+}
+
+class _PostComponentState extends State<PostComponent> {
+
+  bool isLiked = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -96,12 +104,12 @@ class PostComponent extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 15.0),
                   child: Row(
                     children: [
-                      Container(child: ClipOval(child: Image(image: NetworkImage(backendURL+ProfileImage),fit:BoxFit.cover,),),width: 35,height: 35,decoration: BoxDecoration(shape: BoxShape.circle),),
+                      Container(child: ClipOval(child: Image(image: NetworkImage(backendURL+widget.ProfileImage),fit:BoxFit.cover,),),width: 35,height: 35,decoration: BoxDecoration(shape: BoxShape.circle),),
                       SizedBox(
                         width: 10,
                       ),
                       Text(
-                        ProfileName,
+                        widget.ProfileName,
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w700),
                       ),
@@ -112,7 +120,7 @@ class PostComponent extends StatelessWidget {
                   height: 10,
                 ),
                 Image(
-                    image: NetworkImage(backendURL+ PostURL),
+                    image: NetworkImage(backendURL+ widget.PostURL),
                     fit: BoxFit.contain,
                     // height: 100,
                     width: double.maxFinite,
@@ -124,7 +132,11 @@ class PostComponent extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                   child: Row(
                     children: [
-                      Image(image: AssetImage('assets/unlike.png')),
+                      GestureDetector(onTap: (){
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },child: Image(image: AssetImage(isLiked ?'assets/like.png' :'assets/unlike.png'))),
                       SizedBox(
                         width: 15,
                       ),
@@ -137,7 +149,7 @@ class PostComponent extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0, right: 8.0),
-                  child: Text(text),
+                  child: Text(widget.text),
                 )
               ],
             ),

@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:zorko/components/snackBar.dart';
+import 'package:zorko/constants.dart';
 import 'package:zorko/models/Itemmodel.dart';
+import 'package:http/http.dart' as http;
 
 class FilteredItemsPage extends StatefulWidget {
   const FilteredItemsPage({Key? key}) : super(key: key);
@@ -12,88 +17,39 @@ class FilteredItemsPage extends StatefulWidget {
 }
 
 class _FilteredItemsPageState extends State<FilteredItemsPage> {
-  final List<Item> foodItems = [
-    Item(
-      name: "Burger1",
-      price: 2.99.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Juicy beef burger with cheese",
-      category: "Burger",
-    ),
-    Item(
-      name: "Fries1",
-      price: 2.49.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Crispy french fries",
-      category: "Fries",
-    ),
-    Item(
-      name: "Burger1",
-      price: 2.99.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Juicy beef burger with cheese",
-      category: "Burger",
-    ),
-    Item(
-      name: "Fries1",
-      price: 2.49.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Crispy french fries",
-      category: "Fries",
-    ),
-    Item(
-      name: "Burger1",
-      price: 2.99.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Juicy beef burger with cheese",
-      category: "icecreams",
-    ),
-    Item(
-      name: "Fries1",
-      price: 2.49.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Crispy french fries",
-      category: "Fries",
-    ),
-    Item(
-      name: "Burger1",
-      price: 2.99.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Juicy beef burger with cheese",
-      category: "desserts",
-    ),
-    Item(
-      name: "Fries1",
-      price: 2.49.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Crispy french fries",
-      category: "drinks",
-    ),
-    Item(
-      name: "Combos",
-      price: 2.49.toString(),
-      id: 1.toString(),
-      image: "assets/h7.png",
-      description: "Crispy french fries",
-      category: "Combos",
-    ),
-    // Add more items here
-  ];
-
+  bool isLoading = false;
+  List<Item> foodItems = [];
   Map<String, List<Item>> filteredItemsByCategory = {};
   late double budget;
+  List<String> categories = [
+    'Combos',
+    'Burger',
+    'Fries',
+    'Desserts',
+    'Drinks',
+    'Icecreams'
+  ];
 
-  void updateFilteredItems() {
-    // Default to 'Burger' category
-    filterItems('Combos');
+  // void updateFilteredItems() {
+  //   // Check if foodItems is not empty before filtering
+  //   if (foodItems.isNotEmpty) {
+  //     // Default to 'Combos' category
+  //     filterItems('Combos');
+  //   }
+  // }
+
+  Map<String, List<Item>> categorizeItems(List<Item> items, double budget) {
+    Map<String, List<Item>> categorizedItems = {};
+
+    for (Item item in items) {
+      if (double.parse(item.price) <= budget) {
+        String category = item.category;
+        categorizedItems.putIfAbsent(category, () => []);
+        categorizedItems[category]!.add(item);
+      }
+    }
+
+    return categorizedItems;
   }
 
   void filterItems(String category) {
@@ -102,9 +58,7 @@ class _FilteredItemsPageState extends State<FilteredItemsPage> {
     foodItems.forEach((item) {
       if (item.category.toLowerCase() == category.toLowerCase() &&
           double.parse(item.price) <= budget) {
-        if (!tempFilteredItems.containsKey(item.category)) {
-          tempFilteredItems[item.category] = [];
-        }
+        tempFilteredItems.putIfAbsent(item.category, () => []);
         tempFilteredItems[item.category]!.add(item);
       }
     });
@@ -114,16 +68,72 @@ class _FilteredItemsPageState extends State<FilteredItemsPage> {
     });
   }
 
+  void _init() async {
+    setState(() {
+      isLoading = true;
+    });
+    String apiURL = backendURL + "api/menu/";
+    final response = await http.get(Uri.parse(apiURL));
+
+    if (response.statusCode == 200) {
+      List<dynamic> responseData = jsonDecode(response.body);
+
+      List<Item> finalData =
+          responseData.map<Item>((json) => Item.fromJson(json)).toList();
+
+      setState(() {
+        foodItems = finalData;
+        filteredItemsByCategory = categorizeItems(foodItems, budget);
+      });
+      List<String> dup2 = [];
+      for (String key in filteredItemsByCategory.keys) {
+        dup2.add(key);
+      }
+      setState(() {
+        categories = dup2;
+      });
+      // updateFilteredItems(); // Call updateFilteredItems after data is fetched
+    } else {
+      ErrorSnackBar(context, "Something Went Wrong please try again");
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Widget buildCategoryButtons(List<String> categories) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: categories.map((category) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 4.0, right: 4),
+              child: ElevatedButton(
+                onPressed: () => filterItems(category),
+                style: ElevatedButton.styleFrom(
+                  minimumSize:
+                      Size(110, 50), // Change the width and height as needed
+                ),
+                child: Text(category),
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    budget = 0.0;
-    updateFilteredItems();
+    budget = 100000.0;
+    _init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return  isLoading ? Center(child: CircularProgressIndicator(),) : Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -141,7 +151,7 @@ class _FilteredItemsPageState extends State<FilteredItemsPage> {
                   onSubmitted: (value) {
                     setState(() {
                       budget = double.tryParse(value) ?? 0.0;
-                      updateFilteredItems();
+                      // updateFilteredItems();
                     });
                   },
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -157,76 +167,7 @@ class _FilteredItemsPageState extends State<FilteredItemsPage> {
         SizedBox(height: 20),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () => filterItems('Combos'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize:
-                      Size(100, 50), // Change the width and height as needed
-                ),
-                child: Text('Combos'),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-
-              ElevatedButton(
-                onPressed: () => filterItems('Burger'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize:
-                      Size(100, 50), // Change the width and height as needed
-                ),
-                child: Text('Burger'),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              ElevatedButton(
-                onPressed: () => filterItems('Fries'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize:
-                      Size(100, 50), // Change the width and height as needed
-                ),
-                child: Text('Fries'),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              ElevatedButton(
-                onPressed: () => filterItems('Desserts'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize:
-                      Size(100, 50), // Change the width and height as needed
-                ),
-                child: Text('Desserts'),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              ElevatedButton(
-                onPressed: () => filterItems('Drinks'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize:
-                      Size(100, 50), // Change the width and height as needed
-                ),
-                child: Text('Drinks'),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              ElevatedButton(
-                onPressed: () => filterItems('Icecreams'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize:
-                      Size(100, 50), // Change the width and height as needed
-                ),
-                child: Text('Icecreams'),
-              ),
-              // Add more buttons for other categories
-            ],
-          ),
+          child: buildCategoryButtons(categories),
         ),
         Expanded(
           child: ListView.builder(
@@ -256,39 +197,69 @@ class _FilteredItemsPageState extends State<FilteredItemsPage> {
                     itemBuilder: (context, index) {
                       final item = items[index];
                       return Padding(
-                        padding: const EdgeInsets.only(left:20.0,right: 20,top: 15,bottom: 15),
+                        padding: const EdgeInsets.only(
+                            left: 20.0, right: 20, top: 15, bottom: 15),
                         child: GestureDetector(
                           onTap: () {
                             Map<String, dynamic> foodData = {
-                            "name": item.name,
-                            "image": item.image,
-                            "price": item.price,
-                            "description":item.description
-                          };
-                          Navigator.pushNamed(context, "/foodView",
-                              arguments: foodData);
+                              "name": item.name,
+                              "image": item.image,
+                              "price": item.price,
+                              "description": item.description
+                            };
+                            Navigator.pushNamed(context, "/foodView",
+                                arguments: foodData);
                           },
                           child: Container(
-                            padding: EdgeInsets.only(top: 10,bottom: 10),
+                            padding: EdgeInsets.only(top: 10, bottom: 10),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1,color: const Color.fromARGB(255, 68, 62, 62)),
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              border: Border.all(
+                                  width: 1,
+                                  color: const Color.fromARGB(255, 68, 62, 62)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Image(image: AssetImage(item.image),width: 100,height: 100,),
-                                SizedBox(width: 20,),
+                                Image(
+                                  image: NetworkImage(backendURL + item.image),
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  Text(item.name,style: TextStyle(fontSize: 18),),
-                                  SizedBox(height: 5,),
-                                  Text(item.description,style: TextStyle(fontSize: 12),),
-                                  SizedBox(height: 5,),
-                                  Text(item.price,style: TextStyle(color: Colors.red),)
-                                ],),
+                                    Text(
+                                      item.name,
+                                      style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          180, // Adjust width as needed
+                                      child: Text(
+                                        item.description,
+                                        style: TextStyle(fontSize: 12),
+                                        maxLines: 5,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      item.price,
+                                      style: TextStyle(color: Colors.red),
+                                    )
+                                  ],
+                                ),
                               ],
                             ),
                           ),

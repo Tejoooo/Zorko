@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:zorko/components/redeembox.dart';
 
 class RewardsPage extends StatefulWidget {
   const RewardsPage({super.key});
@@ -11,11 +12,17 @@ class RewardsPage extends StatefulWidget {
 class _RewardsPageState extends State<RewardsPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: Text('Rewards'),
+      // ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Stack(
           children: [
             // Background image
             Positioned(
+
               top: -200, // Move the circle up by adjusting this value
               left: -100, // Optional: Adjust left position if needed
               child: Container(
@@ -32,51 +39,84 @@ class _RewardsPageState extends State<RewardsPage> {
               ),
             ),
             Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              // Carousel Slider
-                Container(
-                  decoration: BoxDecoration(),
-                  child: Image.asset('assets/h15.png'),
+              padding:
+                  const EdgeInsets.only(top: 35.0, left: 35.0, right: 35.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[350],
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Icon(Icons.arrow_back_ios_new_outlined),
                 ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                padding: EdgeInsets.all(20),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
                 child: Column(
-                  children: [
-                    Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    // Carousel Slider
+                    SizedBox(height: 80,),
+                    Container(
+                      decoration: BoxDecoration(),
+                      child: Image.asset('assets/h15.png'),
+                    ),
+                    SizedBox(height: 50,),
+                    Text('REWARDS', style: TextStyle(
+                    fontSize: 54.0,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 1.2
+                      ..color = Colors.black54,
+                  // color: Colors.red,
+                  ),),
+                    Column(
                       children: [
-                        Text(
-                          'Zorko Coins',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RewardCard(rewardName: "burger", rewardDescription: "5%", rewardImage: "assets/h16.jpg", rewardPoints: 10),
+                            // RewardCard(rewardName: "pizza", rewardDescription: "5%", rewardImage: "assets/h5.png", rewardPoints: 200),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Text('@200 Zorco'),
+                                // ElevatedButton(onPressed: null, child: Text('Redeem')),
+                              ],
+                            )
+                          
+                          ],
                         ),
-                        Spacer(),
-                        Icon(
-                          Icons.card_giftcard,
-                          size: 30,
+                                            SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RewardCard(rewardName: "drinks", rewardDescription: "5%", rewardImage: "assets/h16.jpg", rewardPoints: 200),
+                            // RewardCard(rewardName: "cokes", rewardDescription: "5%", rewardImage: "assets/h5.png", rewardPoints: 200),
+                          ],
                         ),
-                        Text(
-                          '1000',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RewardCard(rewardName: "drinks", rewardDescription: "5%", rewardImage: "assets/h16.jpg", rewardPoints: 200),
+                            // RewardCard(rewardName: "cokes", rewardDescription: "5%", rewardImage: "assets/h5.png", rewardPoints: 200),
+                          ],
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
             ),
           ],
         ),
-
+      ),
     );
   }
 }

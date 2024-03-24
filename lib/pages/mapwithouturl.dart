@@ -49,7 +49,13 @@ class HeatMaps extends StatefulWidget {
 
 class _HeatMapsState extends State<HeatMaps> {
   late GoogleMapController mapController;
+  List<RestaurantModel> hardcoded = [
+    RestaurantModel(name: 'ZOrko small time', id: "878", address: "Tadipatri CB ROad", longitude: 73.8778, latitude: 23.78387, image: "rest1.jpeg", open: true),
+    RestaurantModel(name: 'ZOrko big time', id: "878", address: "Tadipatri CB ROad", longitude: 89.8778, latitude: 12.78387, image: "rest12.jpeg", open: false)
+    ,RestaurantModel(name: 'ZOrko', id: "878", address: "CB ROad", longitude: 73.8778, latitude: 45.78387, image: "rest1.jpeg", open: false),
+    RestaurantModel(name: 'ZOrko megamall time', id: "878", address: "Tadipatri CB ROad", longitude: 19.8778, latitude: 12.78387, image: "rest12.jpeg", open: true)
 
+    ];
   LatLng _center = LatLng(-23.5557714, -46.6395571);
   double zoom = 11.0;
   bool _isLoading = false;
@@ -59,6 +65,9 @@ class _HeatMapsState extends State<HeatMaps> {
   @override
   void initState() {
     super.initState();
+    for(RestaurantModel rest in hardcoded){
+      _addMarker(rest, LatLng(rest.latitude, rest.longitude));
+    }
     _addMarkers();
   }
 
@@ -69,7 +78,7 @@ class _HeatMapsState extends State<HeatMaps> {
       List<RestaurantModel> restaurants = (jsonDecode(response.body) as List)
       .map((data) => RestaurantModel.fromJson(data))
       .toList();
-
+      
     for (RestaurantModel restaurant in restaurants) {
       _addMarker(restaurant, LatLng(restaurant.latitude, restaurant.longitude));
     }

@@ -135,3 +135,9 @@ class Outlets(APIView):
         serializer_data = RestaurantSerializer(allObjects,many=True)
         return Response(data=serializer_data.data,status=status.HTTP_200_OK)
     
+class MenuView(APIView):
+    def get(self,requst):
+        allObjects = Item.objects.all()
+        serialzer_data = ItemSerializer(allObjects,many=True)
+        return Response(data=serialzer_data.data,status=status.HTTP_200_OK)
+    
