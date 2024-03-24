@@ -61,10 +61,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
       if (response.statusCode == 201) {
         SuccessSnackBar(context, 'Image Uploaded');
         Navigator.pop(context);
-        setState(() {
-          _pickedImage = null;
-          _descriptController.dispose();
-        });
       } else {
         ErrorSnackBar(context,
             'Please try again');

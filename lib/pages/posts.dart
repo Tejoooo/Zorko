@@ -81,6 +81,8 @@ class PostComponent extends StatelessWidget {
         children: [
           Container(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 15.0),
@@ -104,6 +106,7 @@ class PostComponent extends StatelessWidget {
                 Image(
                     image: NetworkImage(backendURL+ PostURL),
                     fit: BoxFit.contain,
+                    // height: 100,
                     width: double.maxFinite,
                 ),
                 SizedBox(
