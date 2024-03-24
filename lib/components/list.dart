@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zorko/components/itemdisplay.dart';
 import 'package:zorko/models/Itemmodel.dart';
+import 'package:zorko/models/fooditems.dart';
 
 class FoodList extends StatefulWidget {
   String foodName;
@@ -44,12 +45,12 @@ Widget EachItemWithSpace(List<Item> items){
   List<Widget> itemWidgets = [];
   items.forEach((element) {
     itemWidgets.add(SizedBox(height: 10,));
-    itemWidgets.add(FoodItem(
+    itemWidgets.add(FoodItemWidget(
       imagePath: element.image,
       id : element.id,
       itemName: element.name,
       price: double.parse(element.price),
-      description: element.description,
+      description: element.description
     ));
     itemWidgets.add(SizedBox(width: 10));
   });

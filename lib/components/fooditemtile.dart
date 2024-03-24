@@ -230,7 +230,7 @@ class _FoodItemTileState extends State<FoodItemTile> {
                 icon: Icon(Icons.comment),
                 onPressed: () {
                   // Show comments or navigate to a screen to view comments
-                  _showCommentsDialog(context, widget.foodItem.comments);
+                  _showCommentsDialog(context,["no comments"]);
                 },
               ),
             ],

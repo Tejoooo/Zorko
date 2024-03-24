@@ -5,28 +5,29 @@ import 'package:flutter/material.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:zorko/models/fooditems.dart';
 
-class FoodItem extends StatefulWidget {
+class FoodItemWidget extends StatefulWidget {
   final String imagePath;
   final String itemName;
   final double price;
   final String description;
   final String id;
 
-  const FoodItem({
+  FoodItemWidget({
     Key? key,
     required this.imagePath,
     required this.itemName,
     required this.price,
     required this.description,
-    required this.id
+    required this.id,
   }) : super(key: key);
 
   @override
-  State<FoodItem> createState() => _FoodItemState();
+  State<FoodItemWidget> createState() => _FoodItemWidgetState();
 }
 
-class _FoodItemState extends State<FoodItem> {
+class _FoodItemWidgetState extends State<FoodItemWidget> {
   Future<bool> cartFunction(int count) async {
     String apiURL = backendURL + "api/";
     if (count == 1) {
@@ -47,6 +48,12 @@ class _FoodItemState extends State<FoodItem> {
     } else {
       return false;
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   int count = 0;

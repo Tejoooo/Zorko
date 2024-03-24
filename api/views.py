@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from .models import UserDetails,Posts,Item,CartItem
-from .serializers import UserDetailsSerializer,PostsSerializer,ItemSerializer,CartItemSerializer,PostSerializer
+from .models import UserDetails,Posts,Item,CartItem,Restaurants
+from .serializers import UserDetailsSerializer,PostsSerializer,ItemSerializer,CartItemSerializer,PostSerializer,RestaurantSerializer
 import json
 
 
@@ -128,4 +128,10 @@ class HomeItemsView(APIView):
             serialized_items = self.serializer_class(items_in_category, many=True).data
             serialized_data.append(serialized_items)
         return Response(data=serialized_data, status=status.HTTP_200_OK)
+    
+class Outlets(APIView):
+    def get(self,request):
+        allObjects = Restaurants.objects.all()
+        serializer_data = RestaurantSerializer(allObjects,many=True)
+        return Response(data=serializer_data.data,status=status.HTTP_200_OK)
     

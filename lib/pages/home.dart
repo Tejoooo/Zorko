@@ -1,14 +1,14 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zorko/components/list.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:zorko/models/Itemmodel.dart';
+import 'package:zorko/models/fooditems.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -25,11 +25,48 @@ class _HomeState extends State<Home> {
 
   int userCoins = 100;
   bool isDark = false;
+  List<FoodItem> cartItems = [];
+
+  // void getCartItems() async{
+  //   User? user = await FirebaseAuth.instance.currentUser;
+  //   if (user!=null){
+  //     String? uid = user.uid;
+  //     String apiURL = backendURL + "api/cart/";
+  //     final response = await http.post(Uri.parse(apiURL),body: {
+  //       "userID":uid
+  //     });
+  //     if(response.statusCode == 200){
+  //       List<dynamic> data = jsonDecode(response.body);
+  //       List<FoodItem> dup = [];
+  //       for (var i = 0; i < data.length; i++) {
+  //         dup.add(FoodItem(
+  //           name: data[i]['item']['name'],
+  //           description: data[i]['item']['description'],
+  //           price: (data[i]['item']['price'] is int)
+  //               ? (data[i]['item']['price'] as int).toDouble()
+  //               : data[i]['item']['price'].toDouble(),
+  //           id: data[i]['item']['id'].toString(),
+  //           image: data[i]['item']['image'],
+  //           count: data[i]['quantity'],
+  //         ));
+  //       }
+  //       setState(() {
+  //         cartItems = dup;
+  //       });
+  //       print(cartItems);
+  //     } else if(response.statusCode == 404){
+
+  //     } else{
+  //       ErrorSnackBar(context, "unable to fetch cart details");
+  //     }
+  //   }
+  // }
 
   void _init() async {
     setState(() {
       isLoading = true;
     });
+    // getCartItems();
     const apiURL = backendURL + 'api/home_items/';
     final response = await http.get(Uri.parse(apiURL));
     if (response.statusCode == 200) {

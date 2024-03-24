@@ -1,26 +1,43 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:google_maps_webservice/places.dart';
-// import 'package:google_maps_webservice/directions.dart';
-
+import 'package:zorko/components/snackBar.dart';
+import 'package:zorko/constants.dart';
+import 'package:http/http.dart' as http;
 
 
 class RestaurantModel {
   final String name;
+  final String id;
   final String address;
   final double longitude;
   final double latitude;
   final String image; // New property for the image
   final bool open;
+
   RestaurantModel({
     required this.name,
+    required this.id,
     required this.address,
     required this.longitude,
     required this.latitude,
-    required this.image, // Initialize the image property
-    required this.open, // Initialize the image property
+    required this.image,
+    required this.open, 
   
   });
+
+  factory RestaurantModel.fromJson(Map<String, dynamic> json) {
+    return RestaurantModel(
+      id:json['id'].toString(),
+      name: json['name'],
+      address: json['address'],
+      longitude: json['longitude'] ?? 73.900,
+      latitude: json['latitude'] ?? 23.8989,
+      image: '', 
+      open: true, 
+    );
+  }
 }
 
 class HeatMaps extends StatefulWidget {
@@ -45,37 +62,19 @@ class _HeatMapsState extends State<HeatMaps> {
     _addMarkers();
   }
 
-  void _addMarkers() {
-    List<RestaurantModel> restaurants = [
-      RestaurantModel(
-        name: 'Restaurant 1',
-        address: 'Address 1',
-        latitude: -23.550519,
-        longitude: -46.633309,
-        image: 'h11.jpg',
-        open: true, // Sample image name
-      ),
-      RestaurantModel(
-        name: 'Restaurant 2',
-        address: 'Address 2',
-        latitude: -23.5629,
-        longitude: -46.6544,
-        image: 'h11.jpg', 
-        open: false,// Sample image name
-      ),
-      RestaurantModel(
-        name: 'Restaurant 3',
-        address: 'Address 3',
-        latitude: -13.5629,
-        longitude: -26.6544,
-        image: 'h11.jpg',
-        open: true, // Sample image name
-      ),
-      // Add more restaurants as needed
-    ];
+  void _addMarkers() async{
+    final response = await http.get(Uri.parse(backendURL+"api/outlets/"));
+    if (response.statusCode == 200){
+      print(jsonDecode(response.body));
+      List<RestaurantModel> restaurants = (jsonDecode(response.body) as List)
+      .map((data) => RestaurantModel.fromJson(data))
+      .toList();
 
     for (RestaurantModel restaurant in restaurants) {
       _addMarker(restaurant, LatLng(restaurant.latitude, restaurant.longitude));
+    }
+    } else{
+      ErrorSnackBar(context, "un able to fetch outlets");
     }
   }
 
@@ -166,7 +165,7 @@ class _HeatMapsState extends State<HeatMaps> {
               target: _center,
               zoom: zoom,
             ),
-            markers: Set.from(markers),
+            markers: markers,
             myLocationEnabled: true,
             myLocationButtonEnabled: true,
           ),

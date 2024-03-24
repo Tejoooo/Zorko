@@ -9,7 +9,6 @@ class FoodItem {
   int? count;
   int? likes;
   String? image;
-  List<String>? comments; // "Comments" changed to "comments" for Dart naming conventions
 
   FoodItem({
     this.name,
@@ -19,6 +18,5 @@ class FoodItem {
     this.count,
     this.likes,
     this.image,
-    this.comments,
   });
 }
