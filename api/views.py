@@ -88,7 +88,7 @@ class AddtoCartView(APIView):
             user = UserDetails.objects.get(userID=userID)
             item = Item.objects.get(id=itemID)
             cartItem = CartItem.objects.create(user=user,item=item)
-            return Response(data={"message":"Item added to cart"},status=status.HTTP_201_CREATED)
+            return Response(data={"message":"Item added to cart"},status=status.HTTP_200_OK)
         
 class DeleteFromCartView(APIView):
     def post(self,request):

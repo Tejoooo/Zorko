@@ -57,6 +57,8 @@ class _AppHomeState extends State<AppHome> {
             UserModel.fromJson(jsonDecode(response.body), token);
         UserController userController = Get.find<UserController>();
         userController.updateUser(userModel);
+      } else{
+        ErrorSnackBar(context, "Unable to fetch the User Data, Please try again");
       }
     }
     // fetch Home Menu once

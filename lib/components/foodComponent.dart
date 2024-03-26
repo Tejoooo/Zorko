@@ -1,10 +1,12 @@
-// ignore_for_file: prefer_const_constructors, use_super_parameters, unused_local_variable
+// ignore_for_file: prefer_const_constructors, use_super_parameters, unused_local_variable, await_only_futures
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:zorko/getx/userController.dart';
 import 'package:zorko/models/fooditems.dart';
 
 class FoodItemWidget extends StatefulWidget {
@@ -29,19 +31,17 @@ class FoodItemWidget extends StatefulWidget {
 
 class _FoodItemWidgetState extends State<FoodItemWidget> {
   Future<bool> cartFunction(int count) async {
-    String apiURL = backendURL + "api/";
+    String apiURL = "${backendURL}api/";
     if (count == 1) {
       apiURL += "add_to_cart/";
     } else if (count == -1) {
       apiURL += "delete_from_cart/";
     }
-    User? user = await FirebaseAuth.instance.currentUser;
-    String? token = user?.uid;
-    
-    print(token);
+    UserController userController = Get.find<UserController>();
+    String uid = userController.user.value.uid;
     final response = await http.post(Uri.parse(apiURL), body: {
       "itemID": widget.id,
-      'userID': token.toString() ?? "token",
+      'userID': uid.toString(),
     });
     if (response.statusCode == 200) {
       return true;
