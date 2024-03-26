@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:zorko/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:zorko/pages/cartPage.dart';
+import 'package:zorko/pages/contact.dart';
 import 'package:zorko/pages/foodView.dart';
 import 'package:zorko/pages/heatmaps.dart';
 import 'package:zorko/pages/loginPage.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         "/foodView":(context) =>FoodIteamView(),
         "/myprofile":(context) => MyProfilePage(),
         "/cart":(context) => CartPage(),
+        "/contact":(context) => ContactPage(),
       },
     );
   }
