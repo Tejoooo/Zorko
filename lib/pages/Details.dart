@@ -4,11 +4,12 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:zorko/constants.dart';
 import 'package:zorko/components/snackBar.dart';
+import 'package:zorko/getx/userController.dart';
 import 'package:zorko/models/userModel.dart';
-import 'package:zorko/provider/userProvider.dart';
 
 class DetailsPage extends StatefulWidget {
   final Function setRegistered;
@@ -42,8 +43,8 @@ class _DetailsPageState extends State<DetailsPage> {
     });
     if (response.statusCode == 201){
       UserModel userModel = UserModel.fromJson(jsonDecode(response.body),token);
-        UserProvider userProvider = UserProvider();
-        userProvider.setUser(userModel);
+        UserController userController = Get.find<UserController>();
+        userController.updateUser(userModel);
       widget.setRegistered(true);
     } else {
       ErrorSnackBar(context, response.body);
