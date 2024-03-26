@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:zorko/components/drawer.dart';
 import 'package:zorko/pages/Details.dart';
 import 'package:zorko/pages/Home.dart';
+import 'package:zorko/pages/heatmaps.dart';
 import 'package:zorko/provider/userProvider.dart';
 import 'package:zorko/models/userModel.dart';
 import 'package:zorko/constants.dart';
@@ -67,7 +68,7 @@ class _AppHomeState extends State<AppHome> {
 
     _pages = [
       HomePage(),
-      // HeatMaps(),
+      HeatMaps(),
       // FilteredItemsPage(),
       // Posts(),
       // MyProfile(),
@@ -83,7 +84,8 @@ class _AppHomeState extends State<AppHome> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? Center(child: CircularProgressIndicator()) :  !isRegistered
+    UserProvider userProvider = Provider.of<UserProvider>(context,listen: true);
+    return isLoading ? Scaffold(body: Center(child: CircularProgressIndicator())) :  !isRegistered
         ? DetailsPage(
             setRegistered: setRegistered,
           ) : WillPopScope(
@@ -145,9 +147,10 @@ class _AppHomeState extends State<AppHome> {
                       };
                         Navigator.pushNamed(context, "/rewards",arguments: data);}, icon: const Icon(Icons.monetization_on)),
                       const SizedBox(width: 5),
-                      Consumer<UserProvider>(builder: (context,value,child){
-                        return Text(value.user.coins);
-                      }),
+                      // Consumer<UserProvider>(builder: (context,value,child){
+                      //   return Text(value.user.coins);
+                      // }),
+                      Text(userProvider.user.coins),
                       const SizedBox(width: 10), 
                     ],
                   ),

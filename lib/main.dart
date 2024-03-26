@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zorko/firebase_options.dart';
 import 'package:get/get.dart';
+import 'package:zorko/pages/heatmaps.dart';
 import 'package:zorko/pages/loginPage.dart';
 import 'package:zorko/pages/otpNumberScreen.dart';
 import 'package:zorko/pages/splashScreen.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<UserProvider>(
       create: (_) => UserProvider(),
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
           "/splash":(context) => SplashScreens(),
           "/login":(context) => LoginScreen(),
           "/otpscreen":(context) => OTPNumberScreen(),
+          "/heatmaps":(context) => HeatMaps(),
         },
       ),
     );

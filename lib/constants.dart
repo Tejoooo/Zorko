@@ -1,1 +1,1 @@
-const backendURL = "https://sunny-genome-broad-grass.trycloudflare.com/";
+const backendURL = "https://sweden-resolution-under-suit.trycloudflare.com/";
