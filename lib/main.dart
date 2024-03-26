@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:zorko/firebase_options.dart';
 import 'package:get/get.dart';
+import 'package:zorko/pages/foodView.dart';
 import 'package:zorko/pages/heatmaps.dart';
 import 'package:zorko/pages/loginPage.dart';
 import 'package:zorko/pages/otpNumberScreen.dart';
@@ -42,7 +43,8 @@ class MyApp extends StatelessWidget {
         "/login":(context) => LoginScreen(),
         "/otpscreen":(context) => OTPNumberScreen(),
         "/heatmaps":(context) => HeatMaps(),
-        "/rewards":(context) => RewardsPage()
+        "/rewards":(context) => RewardsPage(),
+        "/foodView":(context) =>FoodIteamView(),
       },
     );
   }

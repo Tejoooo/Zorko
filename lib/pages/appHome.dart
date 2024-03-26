@@ -6,7 +6,9 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:zorko/components/drawer.dart';
+import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/getx/userController.dart';
+import 'package:zorko/models/Itemmodel.dart';
 import 'package:zorko/pages/Details.dart';
 import 'package:zorko/pages/Home.dart';
 import 'package:zorko/pages/heatmaps.dart';
@@ -44,6 +46,7 @@ class _AppHomeState extends State<AppHome> {
       isLoading = true;
     });
     User? user = FirebaseAuth.instance.currentUser;
+    // fetching user data
     if (user != null) {
       String token = user.uid;
       final String apiURL = "${backendURL}api/user/?userID=$token";
@@ -56,10 +59,31 @@ class _AppHomeState extends State<AppHome> {
         userController.updateUser(userModel);
       }
     }
+    // fetch Home Menu once
+    // const String apiURL = "${backendURL}api/home_items/";
+    // final response = await http.get(Uri.parse(apiURL));
+    // if (response.statusCode == 200){
+    //   final List<dynamic> data = jsonDecode(response.body);
+    //   Map<String, List<Item>> homeMenu = {};
+    //   for (var i = 0; i < data.length; i++) {
+    //     List<Item> temp = [];
+    //     final List<dynamic> item = data[i];
+    //     for (var j = 0; j < item.length; j++) {
+    //       temp.add(Item.fromJson(item[j]));
+    //     }
+    //     homeMenu[item[0]['category']] = temp;
+    //     UserController userController = Get.find<UserController>();
+    //     userController.updateHomeMenu(homeMenu);
+    //     debugPrint(userController.home_menu.toString());
+    //   }
+    // } else{
+    //   ErrorSnackBar(context, "Unable to fetch the Menu, Please try again");
+    // }
     setState(() {
       isLoading = false;
     });
   }
+
 
   @override
   void initState() {
