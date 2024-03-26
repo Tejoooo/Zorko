@@ -7,6 +7,7 @@ import 'package:zorko/pages/appHome.dart';
 import 'package:zorko/pages/cartPage.dart';
 import 'package:zorko/pages/contact.dart';
 import 'package:zorko/pages/foodView.dart';
+import 'package:zorko/pages/otpNumberScreen.dart';
 import 'package:zorko/pages/otpscreen.dart';
 import 'package:zorko/pages/rewards.dart';
 import 'package:zorko/repository/authentication_repository.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         "/rewards":(context) => RewardsPage(),
         "/contact":(context) => ContactPage(),
         "/home" : (context) => AppHome(),
+        "/otpInputScreen":(context) => OTPNumberScreen(),
       },
     );
   }
