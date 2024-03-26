@@ -90,7 +90,14 @@ class _OTPScreenState extends State<OTPScreen> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: verifyPhone,
+              onPressed: () async{
+                await verifyPhone();
+                Map<String,dynamic> data = {
+                  "verificationId":_verificationId,
+                  "phoneNumber":_phoneNumberController.text
+                };
+                Navigator.pushNamed(context, '/otpInputScreen',arguments: data);
+              },
               child: Text('Send OTP'),
             ),
             SizedBox(height: 20),

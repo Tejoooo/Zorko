@@ -22,6 +22,8 @@ class _OTPNumberScreenState extends State<OTPNumberScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> data =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -52,7 +54,7 @@ class _OTPNumberScreenState extends State<OTPNumberScreen> {
                   style: TextStyle(fontSize: 20),
                 ),
                 Text("We have sent the code verfication to"),
-                Text("+91******3566"),
+                Text("+91******${data['phoneNumber'].substring(data['phoneNumber'].length - 4)}"),
                 SizedBox(
                   height: 20,
                 ),
@@ -245,8 +247,7 @@ class _OTPNumberScreenState extends State<OTPNumberScreen> {
                           _controller4.text +
                           _controller5.text +
                           _controller6.text;
-                      debugPrint(otpCode);
-                      String _verificationId = "123";
+                      String _verificationId = data['verificationId'];
                       try {
                         PhoneAuthCredential credential =
                             PhoneAuthProvider.credential(

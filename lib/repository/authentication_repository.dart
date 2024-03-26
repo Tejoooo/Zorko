@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:zorko/pages/appHome.dart';
-import 'package:zorko/pages/otpNumberScreen.dart';
+import 'package:zorko/pages/splashScreen.dart';
 
 class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
@@ -20,7 +20,7 @@ class AuthenticationRepository extends GetxController {
   }
 
   _setInitialScreen(User? user) {
-    user == null ? Get.offAll(() => OTPNumberScreen()) : Get.offAll(() => AppHome());
+    user == null ? Get.offAll(() => Screens()) : Get.offAll(() => AppHome());
   }
 
   Future<void> phoneAuthentication(String phoneNo) async {
