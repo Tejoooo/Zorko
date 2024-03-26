@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import UserDetails,Posts,Item,CartItem,Restaurants
 from .serializers import UserDetailsSerializer,PostsSerializer,ItemSerializer,CartItemSerializer,PostSerializer,RestaurantSerializer
 import json
+from datetime import datetime
 
 
 class UserView(APIView):
@@ -51,25 +52,27 @@ class LikeView(APIView):
         post = Posts.objects.get(id=postID)
         value = request.data.get('value')
         userID = request.data.get('userID')
+        userDetails = UserDetails.objects.get(userID=userID)
         likes = post.likes
         if int(value) == -1:
-            likes['likes'].remove({'userID': userID})
+            likes['likes'].remove({'userID': userID,'time':datetime.now().isoformat(),'image':userDetails.profilepic.url,'name':userDetails.name})
             post.save()
             return Response(data={"message":"Post Unliked"},status=status.HTTP_200_OK)
         if any(like['userID'] == userID for like in likes['likes']):
             return Response(data={"message": "User already liked the post"}, status=status.HTTP_202_ACCEPTED)
-        likes['likes'].append({'userID': request.data.get('userID')})
+        likes['likes'].append({'userID': userID,'time':datetime.now().isoformat(),'image':userDetails.profilepic.url,'name':userDetails.name})
         post.save()
-        return Response(data={"message":"Post Liked"},status=status.HTTP_201_CREATED)
+        return Response(data={"message":"Post Liked"},status=status.HTTP_200_OK)
     
 class CommentView(APIView):
     def post(self,request):
-        postID = request.data.get('postID')
+        postID = int(request.data.get('postID'))
         post = Posts.objects.get(id=postID)
         comment = request.data.get('comment')
         userID = request.data.get('userID')
+        userDetails = UserDetails.objects.get(userID=userID)
         comments = post.comments
-        comments['comments'].append({'userID': userID, 'comment': comment})
+        comments['comments'].append({'userID': userID, 'comment': comment,'image':userDetails.profilepic.url,'name':userDetails.name,'time':datetime.now().isoformat()})
         post.save()
         return Response(data={"message":"Comment Added"},status=status.HTTP_201_CREATED)
 
