@@ -178,24 +178,29 @@ class _HeatMapsState extends State<HeatMaps> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: zoom,
+      body: RefreshIndicator(
+        onRefresh: () async{
+          debugPrint("Refreshed");
+        },
+        child: Stack(
+          children: [
+            GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: _center,
+                zoom: zoom,
+              ),
+              markers: Set.from(markers),
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
             ),
-            markers: Set.from(markers),
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-          ),
-          _isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Container(),
-        ],
+            _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

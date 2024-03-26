@@ -84,7 +84,7 @@ class _CartPageState extends State<CartPage> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
+            child: Column(
                 children: [
                   Column(
                     children: items
@@ -123,7 +123,7 @@ class _CartPageState extends State<CartPage> {
                   ),
                 ],
               ),
-            ),
+          ),
     );
   }
 }
