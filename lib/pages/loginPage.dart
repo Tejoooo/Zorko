@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:zorko/components/snackBar.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -156,6 +157,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(10))
                               ),
                       onPressed: () async {
+                        if(_phoneNumberController.text.isEmpty){
+                          ErrorSnackBar(context, "Please enter a valid phone number.");
+                          return ;
+                        }
                         await verifyPhone();
                         Map<String, dynamic> data = {
                           "verificationId": _verificationId,
