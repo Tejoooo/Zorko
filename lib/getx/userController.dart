@@ -13,13 +13,16 @@ class UserController extends GetxController {
     coins: '',
   ).obs;
 
-  var home_menu = {}.obs;
+  RxMap<String, List<dynamic>> home_menu = RxMap<String, List<dynamic>>();
+
+  get value => null;
 
   void updateUser(UserModel newUser) {
     user.value = newUser;
   }
 
   void updateHomeMenu(Map<String, List<Item>> newMenu) {
-    home_menu.value = newMenu;
+    Map<String, List<dynamic>> convertedMenu = newMenu.map((key, value) => MapEntry(key, value.toList()));
+    home_menu.assignAll(convertedMenu); 
   }
 }

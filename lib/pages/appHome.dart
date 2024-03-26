@@ -60,25 +60,24 @@ class _AppHomeState extends State<AppHome> {
       }
     }
     // fetch Home Menu once
-    // const String apiURL = "${backendURL}api/home_items/";
-    // final response = await http.get(Uri.parse(apiURL));
-    // if (response.statusCode == 200){
-    //   final List<dynamic> data = jsonDecode(response.body);
-    //   Map<String, List<Item>> homeMenu = {};
-    //   for (var i = 0; i < data.length; i++) {
-    //     List<Item> temp = [];
-    //     final List<dynamic> item = data[i];
-    //     for (var j = 0; j < item.length; j++) {
-    //       temp.add(Item.fromJson(item[j]));
-    //     }
-    //     homeMenu[item[0]['category']] = temp;
-    //     UserController userController = Get.find<UserController>();
-    //     userController.updateHomeMenu(homeMenu);
-    //     debugPrint(userController.home_menu.toString());
-    //   }
-    // } else{
-    //   ErrorSnackBar(context, "Unable to fetch the Menu, Please try again");
-    // }
+    const String apiURL = "${backendURL}api/home_items/";
+    final response = await http.get(Uri.parse(apiURL));
+    if (response.statusCode == 200){
+      final List<dynamic> data = jsonDecode(response.body);
+      Map<String, List<Item>> homeMenu = {};
+      for (var i = 0; i < data.length; i++) {
+        List<Item> temp = [];
+        final List<dynamic> item = data[i];
+        for (var j = 0; j < item.length; j++) {
+          temp.add(Item.fromJson(item[j]));
+        }
+        homeMenu[item[0]['category']] = temp;
+        UserController userController = Get.find<UserController>();
+        userController.updateHomeMenu(homeMenu);
+      }
+    } else{
+      ErrorSnackBar(context, "Unable to fetch the Menu, Please try again");
+    }
     setState(() {
       isLoading = false;
     });
@@ -88,7 +87,6 @@ class _AppHomeState extends State<AppHome> {
   @override
   void initState() {
     super.initState();
-
     _pages = [
       HomePage(),
       HeatMaps(),

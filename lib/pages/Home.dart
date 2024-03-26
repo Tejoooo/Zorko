@@ -1,16 +1,10 @@
-// ignore_for_file: unnecessary_string_interpolations, prefer_const_constructors
-
-import 'dart:convert';
+// ignore_for_file: unnecessary_string_interpolations, prefer_const_constructors, non_constant_identifier_names, unnecessary_new, unused_field, file_names
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zorko/components/foodListsComp.dart';
-import 'package:zorko/components/snackBar.dart';
-import 'package:zorko/constants.dart';
 import 'package:zorko/getx/userController.dart';
 import 'package:zorko/models/Itemmodel.dart';
-import 'package:http/http.dart' as http;
-import 'package:zorko/models/fooditems.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,41 +15,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool isLoading = false;
-  Map<String, List<Item>> categoriesMenu = {};
-
-  void _init() async {
-    setState(() {
-      isLoading = true;
-    });
-    const apiURL = '${backendURL}api/home_items/';
-    final response = await http.get(Uri.parse(apiURL));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      Map<String, List<Item>> dup1 = {};
-      for (var i = 0; i < data.length; i++) {
-        List<Item> dup2 = [];
-        final List<dynamic> item = data[i];
-        for (var j = 0; j < item.length; j++) {
-          dup2.add(Item.fromJson(item[j]));
-        }
-        dup1[item[0]['category']] = dup2;
-      }
-      setState(() {
-        categoriesMenu = dup1;
-        isLoading = false;
-      });
-    } else {
-      ErrorSnackBar(context, "Failed to load data. Please try again later.");
-    }
-  }
+  final UserController userController = Get.find<UserController>();
 
    @override
   void initState() {
     super.initState();
-    _init();
-    // UserController userController = Get.find()<UserController>();
-    // categoriesMenu = userController.home_menu as Map<String, List<Item>>;
   }
 
 
@@ -90,12 +54,11 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(13),
                     ),
                   ),
-                  isLoading
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 60),
-                          child: Center(child: CircularProgressIndicator()),
-                        )
-                      : TotalMenu(categoriesMenu),
+
+                      GetBuilder<UserController>(builder: (controller){
+                        var home_menu = controller.home_menu;
+                        return TotalMenu(home_menu as Map<String, List>);
+                      }),
                   SizedBox(
                     height: 20,
                   ),
