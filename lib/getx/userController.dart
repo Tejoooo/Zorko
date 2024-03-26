@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:zorko/models/Itemmodel.dart';
+import 'package:zorko/models/fooditems.dart';
 import 'package:zorko/models/userModel.dart';
 
 class UserController extends GetxController {
@@ -21,7 +21,7 @@ class UserController extends GetxController {
     user.value = newUser;
   }
 
-  void updateHomeMenu(Map<String, List<Item>> newMenu) {
+  void updateHomeMenu(Map<String, List<FoodItem>> newMenu) {
     Map<String, List<dynamic>> convertedMenu = newMenu.map((key, value) => MapEntry(key, value.toList()));
     home_menu.assignAll(convertedMenu); 
   }

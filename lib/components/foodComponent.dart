@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
@@ -15,6 +16,7 @@ class FoodItemWidget extends StatefulWidget {
   final double price;
   final String description;
   final String id;
+  int count;
 
   FoodItemWidget({
     Key? key,
@@ -23,6 +25,7 @@ class FoodItemWidget extends StatefulWidget {
     required this.price,
     required this.description,
     required this.id,
+    required this.count,
   }) : super(key: key);
 
   @override
@@ -30,11 +33,11 @@ class FoodItemWidget extends StatefulWidget {
 }
 
 class _FoodItemWidgetState extends State<FoodItemWidget> {
-  Future<bool> cartFunction(int count) async {
+  Future<bool> cartFunction(int val) async {
     String apiURL = "${backendURL}api/";
-    if (count == 1) {
+    if (val == 1) {
       apiURL += "add_to_cart/";
-    } else if (count == -1) {
+    } else if (val == -1) {
       apiURL += "delete_from_cart/";
     }
     UserController userController = Get.find<UserController>();
@@ -56,7 +59,6 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
     super.initState();
   }
 
-  int count = 0;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -119,7 +121,7 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
                   SizedBox(
                     height: 10,
                   ),
-                  count == 0
+                  widget.count == 0
                       ? SizedBox(
                           height: 40,
                           width: 150,
@@ -135,7 +137,7 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
                                 // Add your onPressed logic here
                                 if (await cartFunction(1)){
                                   setState(() {
-                                    count++;
+                                    widget.count -= 1;
                                   });
                                 } else{
                                   // ErrorSnackBar(context, "Operation not done");
@@ -181,7 +183,7 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
                                   onPressed: () async{
                                     if (await cartFunction(-1)){
                                   setState(() {
-                                    count--;
+                                    widget.count += 1;
                                   });
                                 } else{
                                   ErrorSnackBar(context, "Operation not done");
@@ -208,7 +210,7 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
                                 ),
                               ),
                               Text(
-                                count.toString(),
+                                widget.count.toString(),
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.black,
@@ -226,7 +228,7 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
                                   onPressed: () async{
                                     if (await cartFunction(1)){
                                   setState(() {
-                                    count++;
+                                    widget.count += 1;
                                   });
                                 } else{
                                   ErrorSnackBar(context, "Operation not done");

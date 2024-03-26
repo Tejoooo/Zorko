@@ -9,6 +9,7 @@ import 'package:zorko/components/drawer.dart';
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/getx/userController.dart';
 import 'package:zorko/models/Itemmodel.dart';
+import 'package:zorko/models/fooditems.dart';
 import 'package:zorko/pages/Details.dart';
 import 'package:zorko/pages/Home.dart';
 import 'package:zorko/pages/heatmaps.dart';
@@ -64,15 +65,17 @@ class _AppHomeState extends State<AppHome> {
     }
     // fetch Home Menu once
     const String apiURL = "${backendURL}api/home_items/";
-    final response = await http.get(Uri.parse(apiURL));
+    final response = await http.post(Uri.parse(apiURL),body: {
+      "userID": FirebaseAuth.instance.currentUser!.uid,
+    });
     if (response.statusCode == 200){
       final List<dynamic> data = jsonDecode(response.body);
-      Map<String, List<Item>> homeMenu = {};
+      Map<String, List<FoodItem>> homeMenu = {};
       for (var i = 0; i < data.length; i++) {
-        List<Item> temp = [];
+        List<FoodItem> temp = [];
         final List<dynamic> item = data[i];
         for (var j = 0; j < item.length; j++) {
-          temp.add(Item.fromJson(item[j]));
+          temp.add(FoodItem.fromJson(item[j]));
         }
         homeMenu[item[0]['category']] = temp;
         UserController userController = Get.find<UserController>();

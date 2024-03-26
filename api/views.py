@@ -119,7 +119,7 @@ class CartView(APIView):
     
 class HomeItemsView(APIView):
     serializer_class = ItemSerializer
-    def get(self,request):
+    def post(self,request):
         items = Item.objects.all()
         categories = Item.objects.values_list('category',flat=True).distinct()
         serialized_data = []
@@ -127,6 +127,19 @@ class HomeItemsView(APIView):
             items_in_category = items.filter(category=category)[:5]
             serialized_items = self.serializer_class(items_in_category, many=True).data
             serialized_data.append(serialized_items)
+        userID = request.data.get('userID')
+        user = UserDetails.objects.filter(userID=userID).first()
+        cartItems = CartItem.objects.filter(user=user)
+        item_counts = {cart_item.item.id: cart_item.quantity for cart_item in cartItems}
+        
+        for category_items in serialized_data:
+            for item in category_items:
+                item_id = item['id']
+                if item_id in item_counts:
+                    item['count'] = item_counts[item_id]
+                else:
+                    item['count'] = 0
+        
         return Response(data=serialized_data, status=status.HTTP_200_OK)
     
 class Outlets(APIView):

@@ -45,6 +45,7 @@ class _CartPageState extends State<CartPage> {
             id: data[i]['item']['id'].toString(),
             image: data[i]['item']['image'],
             count: data[i]['quantity'],
+            category: data[i]['item']['category'],
           ));
         }
         setState(() {

@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zorko/components/foodListsComp.dart';
@@ -10,6 +11,7 @@ import 'package:zorko/constants.dart';
 import 'package:zorko/getx/userController.dart';
 import 'package:zorko/models/Itemmodel.dart';
 import 'package:http/http.dart' as http;
+import 'package:zorko/models/fooditems.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -32,15 +34,17 @@ class _HomePageState extends State<HomePage> {
     return RefreshIndicator(
       onRefresh: () async {
         const String apiURL = "${backendURL}api/home_items/";
-        final response = await http.get(Uri.parse(apiURL));
+        final response = await http.post(Uri.parse(apiURL), body: {
+          "userID": FirebaseAuth.instance.currentUser!.uid,
+        });
         if (response.statusCode == 200) {
           final List<dynamic> data = jsonDecode(response.body);
-          Map<String, List<Item>> homeMenu = {};
+          Map<String, List<FoodItem>> homeMenu = {};
           for (var i = 0; i < data.length; i++) {
-            List<Item> temp = [];
+            List<FoodItem> temp = [];
             final List<dynamic> item = data[i];
             for (var j = 0; j < item.length; j++) {
-              temp.add(Item.fromJson(item[j]));
+              temp.add(FoodItem.fromJson(item[j]));
             }
             homeMenu[item[0]['category']] = temp;
             UserController userController = Get.find<UserController>();
@@ -102,7 +106,7 @@ Widget TotalMenu(Map<String, List> categoriesMenu) {
   categoriesMenu.forEach((category, items) {
     columns.add(SizedBox(height: 10));
     columns.add(
-        FoodList(foodName: category.toUpperCase(), items: items.cast<Item>()));
+        FoodList(foodName: category.toUpperCase(), items: items.cast<FoodItem>()));
   });
   return Column(
     children: columns,

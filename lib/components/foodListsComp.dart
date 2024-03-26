@@ -8,7 +8,7 @@ import 'package:zorko/models/fooditems.dart';
 
 class FoodList extends StatefulWidget {
   String foodName;
-  List<Item> items;
+  List<FoodItem> items;
   FoodList({super.key,required this.foodName,required this.items});
 
   @override
@@ -41,16 +41,17 @@ class _FoodListState extends State<FoodList> {
   }
 }
 
-Widget EachItemWithSpace(List<Item> items){
+Widget EachItemWithSpace(List<FoodItem> items){
   List<Widget> itemWidgets = [];
   items.forEach((element) {
     itemWidgets.add(SizedBox(height: 10,));
     itemWidgets.add(FoodItemWidget(
-      imagePath: element.image,
-      id : element.id,
-      itemName: element.name,
-      price: double.parse(element.price),
-      description: element.description
+      imagePath: element.image ?? "",
+      id : element.id ?? "",
+      itemName: element.name ?? "",
+      price: double.parse(element.price as String),
+      description: element.description ?? "",
+      count: element.count ?? 0,
     ));
     itemWidgets.add(SizedBox(width: 10));
   });
