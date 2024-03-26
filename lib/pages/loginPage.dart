@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print, prefer_function_declarations_over_variables, prefer_const_constructors, prefer_final_fields, use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously, file_names, prefer_const_literals_to_create_immutables
+// ignore_for_file: avoid_print, prefer_function_declarations_over_variables, prefer_const_constructors, prefer_final_fields, use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously, file_names
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,11 +61,19 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     countryController.text = "+91";
+    bool _showErrorMessage = false;
     return Scaffold(
       extendBodyBehindAppBar: true,
       // backgroundColor: [Color(0xFFFFCE92), Color(0xFFED8F03)],
       appBar: AppBar(
-        title: Text('Firebase OTP Auth'),
+        // title: Text('Firebase OTP Auth'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context)
+                .pop(); // Navigate back when the button is pressed
+          },
+        ),
         backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
@@ -86,7 +95,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-        
             Center(
               child: Padding(
                 padding: EdgeInsets.all(20),
@@ -100,13 +108,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     // SizedBox(
                     //     height: 80,
                     //   ),
-                      Container(
-                        decoration: BoxDecoration(),
-                        child: Image.asset('assets/h19.jpg'),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
+                    Container(
+                      decoration: BoxDecoration(),
+                      child: Image.asset('assets/h19.jpg'),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Container(
                       height: 55,
                       decoration: BoxDecoration(
@@ -143,23 +151,27 @@ class _LoginScreenState extends State<LoginScreen> {
                               border: InputBorder.none,
                               hintText: "Phone Number",
                             ),
-                          ))
+                            onChanged: (text) {
+                              setState(() {
+                                _showErrorMessage = text.isEmpty;
+                              });
+                            },
+                          )),
+                          
                         ],
                       ),
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                      
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFFEF7931),
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))
-                              ),
+                              borderRadius: BorderRadius.circular(10))),
                       onPressed: () async {
-                        if(_phoneNumberController.text.isEmpty){
-                          ErrorSnackBar(context, "Please enter a valid phone number.");
-                          return ;
+                        if (_phoneNumberController.text.isEmpty || _phoneNumberController.text.length < 10) {
+                          ErrorSnackBar(context, 'Enter valid phone number');
+                          return;
                         }
                         await verifyPhone();
                         Map<String, dynamic> data = {

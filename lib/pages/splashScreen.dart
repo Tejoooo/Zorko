@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SplashScreens extends StatefulWidget {
   @override
@@ -19,6 +20,9 @@ class _SplashScreensState extends State<SplashScreens> {
       setState(() {
         _currentPage = _pageController.page!.round();
       });
+
+       
+
     });
   }
 
@@ -26,6 +30,7 @@ class _SplashScreensState extends State<SplashScreens> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             height: 2,
@@ -44,8 +49,19 @@ class _SplashScreensState extends State<SplashScreens> {
                 buildPage('We provide the fastest delivery', 'assets/h3.png'),
                 buildPage('We have a good system', 'assets/h4.png'),
               ],
+              
             ),
+
           ),
+          SmoothPageIndicator(
+              controller: _pageController, // PageController
+              count: 3, // Number of pages
+              effect: WormEffect(
+                activeDotColor: Color(0xFFEF7931),
+                dotColor: Color(0xFFEF7931).withOpacity(0.1),
+              ), // Choose the indicator effect
+            ),
+            SizedBox(height: 60,)
         ],
       ),
     );
@@ -109,14 +125,15 @@ class _SplashScreensState extends State<SplashScreens> {
               SizedBox(
                 height: 20,
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  4,
-                  (index) => _currentPage == index ? SplashScreenDot(active: true) : SplashScreenDot(active: false),
-                ),
-              )
+              
+              // Row(
+              //   crossAxisAlignment: CrossAxisAlignment.center,
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: List.generate(
+              //     4,
+              //     (index) => _currentPage == index ? SplashScreenDot(active: true) : SplashScreenDot(active: false),
+              //   ),
+              // )
             ],
           )
         ],

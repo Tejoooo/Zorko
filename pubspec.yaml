@@ -47,6 +47,7 @@ dependencies:
   url_launcher: ^6.2.5
   provider: ^6.1.2
   geolocator: ^10.1.0
+  smooth_page_indicator: ^1.0.0+2
 
 
 dev_dependencies:
