@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:zorko/pages/heatmaps.dart';
 import 'package:zorko/pages/loginPage.dart';
 import 'package:zorko/pages/otpNumberScreen.dart';
+import 'package:zorko/pages/rewards.dart';
 import 'package:zorko/pages/splashScreen.dart';
 import 'package:zorko/getx/userController.dart';
 import 'package:zorko/repository/authRepository.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         "/login":(context) => LoginScreen(),
         "/otpscreen":(context) => OTPNumberScreen(),
         "/heatmaps":(context) => HeatMaps(),
+        "/rewards":(context) => RewardsPage()
       },
     );
   }

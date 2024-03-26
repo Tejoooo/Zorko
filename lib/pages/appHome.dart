@@ -143,8 +143,9 @@ class _AppHomeState extends State<AppHome> {
                           const SizedBox(width: 10),
                           IconButton(
                               onPressed: () {
+                                UserController userController = Get.find<UserController>();
                                 Map<String, dynamic> data = {
-                                  // "coins":coins,
+                                  "coins":userController.user.value.coins,
                                   "userID":
                                       FirebaseAuth.instance.currentUser!.uid,
                                 };
