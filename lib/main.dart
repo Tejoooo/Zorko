@@ -8,6 +8,7 @@ import 'package:zorko/pages/foodView.dart';
 import 'package:zorko/pages/heatmaps.dart';
 import 'package:zorko/pages/loginPage.dart';
 import 'package:zorko/pages/otpNumberScreen.dart';
+import 'package:zorko/pages/profilePage.dart';
 import 'package:zorko/pages/rewards.dart';
 import 'package:zorko/pages/splashScreen.dart';
 import 'package:zorko/getx/userController.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         "/heatmaps":(context) => HeatMaps(),
         "/rewards":(context) => RewardsPage(),
         "/foodView":(context) =>FoodIteamView(),
+        "/myprofile":(context) => MyProfilePage(),
       },
     );
   }
