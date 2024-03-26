@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, prefer_const_constructors_in_immutables, prefer_final_fields, use_build_context_synchronously, must_be_immutable
+
+import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:zorko/constants.dart';
 import 'package:zorko/components/snackBar.dart';
+import 'package:zorko/models/userModel.dart';
+import 'package:zorko/provider/userProvider.dart';
 
 class DetailsPage extends StatefulWidget {
   final Function setRegistered;
@@ -26,11 +28,10 @@ class _DetailsPageState extends State<DetailsPage> {
   TextEditingController _pincodeController = TextEditingController();
 
   void _register() async{
-    const apiURL = backendURL+"api/user/";
+    const apiURL = "${backendURL}api/user/";
     User? user = FirebaseAuth.instance.currentUser;
     String? token = user!.uid;
     String? phoneNumber = user.phoneNumber;
-    debugPrint(token!.length.toString());
     final response = await http.post(Uri.parse(apiURL),body: {
       "userID" : token,
       "name": _usernameController.text,
@@ -39,9 +40,10 @@ class _DetailsPageState extends State<DetailsPage> {
       "pincode": _pincodeController.text,
       "state":"dup",
     });
-    debugPrint("lakshay;");
-    debugPrint(response.statusCode.toString());
     if (response.statusCode == 201){
+      UserModel userModel = UserModel.fromJson(jsonDecode(response.body),token);
+        UserProvider userProvider = UserProvider();
+        userProvider.setUser(userModel);
       widget.setRegistered(true);
     } else {
       ErrorSnackBar(context, response.body);
@@ -51,28 +53,6 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: Stack(
-      //   children: [
-      //     Positioned(
-      //       top: -270, // Move the circle up by adjusting this value
-      //       left: -100, // Optional: Adjust left position if needed
-      //       child: Container(
-      //         width: 600, // Adjust width of the circle if needed
-      //         height: 600, // Adjust height of the circle if needed
-      //         decoration: const BoxDecoration(
-      //           shape: BoxShape.circle,
-      //           gradient: LinearGradient(
-      //             begin: Alignment.centerLeft,
-      //             end: Alignment.centerRight,
-      //             colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //     // ignore: avoid_unnecessary_containers
-      //     Padding(padding: EdgeInsets.only(top: 100),child: Image(image: AssetImage('assets/registerProfile.png')),),
-      //   ],
-      // ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(

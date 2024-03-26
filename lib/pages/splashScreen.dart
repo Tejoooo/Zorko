@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Screens extends StatefulWidget {
+class SplashScreens extends StatefulWidget {
   @override
-  _ScreensState createState() => _ScreensState();
+  _SplashScreensState createState() => _SplashScreensState();
 }
 
-class _ScreensState extends State<Screens> {
+class _SplashScreensState extends State<SplashScreens> {
   int _currentPage = 0;
   final PageController _pageController = PageController();
 

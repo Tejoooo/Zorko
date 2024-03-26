@@ -1,23 +1,17 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, unnecessary_new, file_names, deprecated_member_use
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:zorko/components/bottomnavigationbar.dart';
-import 'package:zorko/components/filter.dart';
-import 'package:zorko/components/fooditemtile.dart';
-import 'package:zorko/components/snackBar.dart';
-import 'package:zorko/constants.dart';
-import 'package:zorko/models/fooditems.dart';
-import 'package:zorko/pages/Details.dart';
-import 'package:zorko/pages/fooditemspage.dart';
-import 'package:zorko/pages/home.dart';
-import 'package:zorko/pages/mapwithouturl.dart';
-import 'package:zorko/pages/myprofile.dart';
-import 'package:zorko/pages/posts.dart';
-import 'package:zorko/components/drawer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:zorko/components/drawer.dart';
+import 'package:zorko/pages/Details.dart';
+import 'package:zorko/pages/Home.dart';
+import 'package:zorko/provider/userProvider.dart';
+import 'package:zorko/models/userModel.dart';
+import 'package:zorko/constants.dart';
+
 
 class AppHome extends StatefulWidget {
   const AppHome({super.key});
@@ -31,7 +25,7 @@ class _AppHomeState extends State<AppHome> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   late final List<Widget> _pages;
   bool isRegistered = false;
-  String coins = "0";
+  bool isLoading = false;
 
   void setIndex(int val) {
     setState(() {
@@ -47,41 +41,24 @@ class _AppHomeState extends State<AppHome> {
   
 
   void _init() async {
+    setState(() {
+      isLoading = true;
+    });
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      String? token = user.uid;
-      String apiURL = backendURL + "api/user/";
-      if (token != null) {
-        apiURL = apiURL + "?userID=" + token;
-      }
+      String token = user.uid;
+      final String apiURL = "${backendURL}api/user/?userID=$token";
       final response = await http.get(Uri.parse(apiURL));
       if (response.statusCode == 200) {
         setRegistered(true);
-        fetchUserDetails(token);
+        UserModel userModel = UserModel.fromJson(jsonDecode(response.body),token);
+        UserProvider userProvider = UserProvider();
+        userProvider.setUser(userModel);
       }
     }
-  }
-
-  void updateCoins() {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      String? token = user.uid;
-      fetchUserDetails(token);
-    }
-  }
-
-  void fetchUserDetails(String token) async {
-    String apiURL = backendURL + "api/user/" + "?userID=" + token;
-    final response = await http.get(Uri.parse(apiURL));
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(response.body);
-      setState(() {
-        coins = data['coins'].toString();
-        print(coins);
-      });
-    } else {
-      ErrorSnackBar(context, "user details unable to fetch");
-    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -89,11 +66,11 @@ class _AppHomeState extends State<AppHome> {
     super.initState();
 
     _pages = [
-      Home(setIndex: setIndex,),
-      HeatMaps(),
-      FilteredItemsPage(),
-      Posts(),
-      MyProfile(),
+      HomePage(),
+      // HeatMaps(),
+      // FilteredItemsPage(),
+      // Posts(),
+      // MyProfile(),
     ];
     _init();
   }
@@ -106,11 +83,10 @@ class _AppHomeState extends State<AppHome> {
 
   @override
   Widget build(BuildContext context) {
-    return !isRegistered
+    return isLoading ? Center(child: CircularProgressIndicator()) :  !isRegistered
         ? DetailsPage(
             setRegistered: setRegistered,
-          )
-        : WillPopScope(
+          ) : WillPopScope(
             onWillPop: () async {
               if (_currentIndex != 0) {
                 setState(() {
@@ -141,7 +117,7 @@ class _AppHomeState extends State<AppHome> {
               key: _scaffoldKey,
               appBar: AppBar(
                 flexibleSpace: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                         colors: [Color(0xFFFFCE92), Color(0xFFED8F03)],
                         begin: Alignment.centerLeft,
@@ -149,40 +125,41 @@ class _AppHomeState extends State<AppHome> {
                   ),
                 ),
                 leading: IconButton(
-                  icon: Icon(Icons.menu),
+                  icon: const Icon(Icons.menu),
                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 ),
                 actions: [
                   Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.shopping_cart),
+                        icon: const Icon(Icons.shopping_cart),
                         onPressed: () {
-                          // Navigate to cart screen or show cart items
                           Navigator.pushNamed(context, "/cart");
                         },
                       ),
-                      SizedBox(width: 10), // Add some spacing between icons
+                      const SizedBox(width: 10), 
                       IconButton(onPressed: () {
                         Map<String,dynamic> data = {
-                        "coins":coins,
+                        // "coins":coins,
                         "userID":FirebaseAuth.instance.currentUser!.uid,
                       };
-                        Navigator.pushNamed(context, "/rewards",arguments: data);updateCoins();}, icon: Icon(Icons.monetization_on)),
-                      SizedBox(width: 5),
-                      Text(coins), // Display user's coins
-                      SizedBox(width: 10), // Add some spacing between icons
+                        Navigator.pushNamed(context, "/rewards",arguments: data);}, icon: const Icon(Icons.monetization_on)),
+                      const SizedBox(width: 5),
+                      Consumer<UserProvider>(builder: (context,value,child){
+                        return Text(value.user.coins);
+                      }),
+                      const SizedBox(width: 10), 
                     ],
                   ),
                 ],
               ),
-              drawer: DrawerWt(),
+              drawer: const DrawerWt(),
               body: _pages[_currentIndex],
               bottomNavigationBar: Container(
                 height: 66,
                 padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(24)),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(24)),
                   color: Colors.transparent,
                 ),
                 child: Row(
@@ -224,16 +201,15 @@ class _AppHomeState extends State<AppHome> {
               floatingActionButton: _currentIndex == 3
                   ? FloatingActionButton(
                       onPressed: () {
-                        // Your action here
                         Navigator.pushNamed(context, "/upload");
                       },
                       child: Icon(Icons.add,size: 32,),
                       backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white, // Set foreground color
-                      elevation: 0, // Set elevation to 0 to remove shadow
+                      foregroundColor: Colors.white, 
+                      elevation: 0, 
                       shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.circular(10), // Set border radius
+                            BorderRadius.circular(10), 
                       ),
                     )
                   : null,
