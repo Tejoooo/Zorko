@@ -26,8 +26,8 @@ class FoodItem {
     return FoodItem(
       name: json['name'],
       description: json['description'],
-      price: json['price'],
-      id: json['id'],
+      price: double.parse(json['price'].toString()),
+      id: json['id'].toString(),
       count: json['count'],
       likes: json['likes'] ?? 0,
       image: json['image'],

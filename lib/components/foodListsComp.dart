@@ -49,7 +49,7 @@ Widget EachItemWithSpace(List<FoodItem> items){
       imagePath: element.image ?? "",
       id : element.id ?? "",
       itemName: element.name ?? "",
-      price: double.parse(element.price as String),
+      price: double.parse(element.price.toString()),
       description: element.description ?? "",
       count: element.count ?? 0,
     ));

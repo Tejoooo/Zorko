@@ -110,7 +110,7 @@ class _FoodItemWidgetState extends State<FoodItemWidget> {
                         height: 1,
                       ),
                       Text(
-                        'Price: \$${widget.price}',
+                        'Price: \$${widget.price.toString()}',
                         style: TextStyle(
                           color: Color(0xFFFA4A0C),
                           fontSize: 16,
