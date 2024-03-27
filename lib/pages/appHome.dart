@@ -15,6 +15,7 @@ import 'package:zorko/pages/Home.dart';
 import 'package:zorko/pages/heatmaps.dart';
 import 'package:zorko/models/userModel.dart';
 import 'package:zorko/constants.dart';
+import 'package:zorko/pages/posts.dart';
 import 'package:zorko/pages/profilePage.dart';
 
 class AppHome extends StatefulWidget {
@@ -97,9 +98,8 @@ class _AppHomeState extends State<AppHome> {
       HomePage(),
       HeatMaps(),
       // FilteredItemsPage(),
-      // Posts(),
       MyProfilePage(),
-      MyProfilePage(),
+      Posts(),
       MyProfilePage(),
     ];
     _init();
