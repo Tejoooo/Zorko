@@ -42,7 +42,7 @@ class PostsView(APIView):
         post_serializer = PostSerializer(data=requestData)
         if post_serializer.is_valid():
             post_serializer.save()
-            return Response(data=post_serializer.data,status=status.HTTP_201_CREATED)
+            return Response(data={'message':"done"},status=status.HTTP_201_CREATED)
         print(post_serializer.errors)
         return Response(data=post_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     

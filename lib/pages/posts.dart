@@ -1,10 +1,7 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, must_be_immutable
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_unnecessary_containers, must_be_immutable, sort_child_properties_last, sized_box_for_whitespace, unnecessary_cast
 
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
@@ -34,15 +31,13 @@ class _PostsState extends State<Posts> {
         fetchedPosts = jsonData.map((data) => Post.fromJson(data)).toList();
         isLoading = false;
       });
-      print(fetchedPosts[0].image);
     } else {
-      ErrorSnackBar(context, "Looks like something went wrong");
+      ErrorSnackBar(context as BuildContext, "Looks like something went wrong");
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _init();
   }
@@ -50,7 +45,7 @@ class _PostsState extends State<Posts> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: isLoading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
+      child: isLoading ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.black)),) : SingleChildScrollView(
           child: Column(
                   children: [
                     SizedBox(
@@ -127,6 +122,7 @@ class _PostComponentState extends State<PostComponent> {
                 Container(
                   width: double.maxFinite, 
                   height: 350,
+                  decoration: BoxDecoration(color: Color.fromARGB(255, 66, 63, 63)),
                   child: Image(
                     image: NetworkImage(
                       backendURL + widget.postDetails.image,
@@ -139,7 +135,9 @@ class _PostComponentState extends State<PostComponent> {
                       } else {
                         return Center(
                           child:
-                              CircularProgressIndicator(),
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white)
+                              ),
                         );
                       }
                     },

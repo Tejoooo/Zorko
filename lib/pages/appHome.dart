@@ -184,9 +184,6 @@ class _AppHomeState extends State<AppHome> {
                               },
                               icon: const Icon(Icons.monetization_on)),
                           const SizedBox(width: 5),
-                          // Consumer<UserProvider>(builder: (context,value,child){
-                          //   return Text(value.user.coins);
-                          // }),
                           GetBuilder<UserController>(
                             builder: (controller) {
                               return Text(

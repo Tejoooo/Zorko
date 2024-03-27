@@ -42,8 +42,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     setState(() {
       _isLoading = true;
     });
-    final url = Uri.parse(backendURL + '/api/posts/');
-    print(backendURL);
+    final url = Uri.parse(backendURL + 'api/posts/');
     try {
       final request = http.MultipartRequest('POST', url);
       request.files.add(await http.MultipartFile.fromPath('image', filePath));
@@ -56,8 +55,6 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
         'likes':[]
       });
       final response = await request.send();
-      String responseBody = await response.stream.bytesToString();
-      Map<String, dynamic> jsonResponse = json.decode(responseBody);
       if (response.statusCode == 201) {
         SuccessSnackBar(context, 'Image Uploaded');
         Navigator.pop(context);
