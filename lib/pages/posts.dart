@@ -50,14 +50,8 @@ class _PostsState extends State<Posts> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: isLoading
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 80.0),
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              : Column(
+      child: isLoading ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
+          child: Column(
                   children: [
                     SizedBox(
                       height: 12,
@@ -72,7 +66,6 @@ class _PostsState extends State<Posts> {
                   ],
                 ),
         ),
-      ),
     );
   }
 }
