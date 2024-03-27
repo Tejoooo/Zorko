@@ -54,12 +54,19 @@ class LikeView(APIView):
         userID = request.data.get('userID')
         userDetails = UserDetails.objects.get(userID=userID)
         likes = post.likes
+        
+        def remove_like_by_user_id(likes, user_id):
+            return [like for like in likes if like["userID"] != user_id]
+        
         if int(value) == -1:
-            likes['likes'].remove({'userID': userID,'time':datetime.now().isoformat(),'image':userDetails.profilepic.url,'name':userDetails.name})
+            modified_likes = remove_like_by_user_id(likes["likes"], userID)
+            # post.likes = json.dumps({"likes": modified_likes})
+            post.likes = modified_likes
             post.save()
             return Response(data={"message":"Post Unliked"},status=status.HTTP_200_OK)
-        if any(like['userID'] == userID for like in likes['likes']):
-            return Response(data={"message": "User already liked the post"}, status=status.HTTP_202_ACCEPTED)
+        print(likes["likes"])
+        if any(like["userID"] == userID for like in likes["likes"]):
+            return Response(data={"message": "User already liked the post"}, status=status.HTTP_200_OK)
         likes['likes'].append({'userID': userID,'time':datetime.now().isoformat(),'image':userDetails.profilepic.url,'name':userDetails.name})
         post.save()
         return Response(data={"message":"Post Liked"},status=status.HTTP_200_OK)

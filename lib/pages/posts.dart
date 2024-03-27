@@ -2,9 +2,11 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:zorko/components/snackBar.dart';
 import 'package:zorko/constants.dart';
+import 'package:zorko/getx/userController.dart';
 
 import '../models/postsmodel.dart';
 
@@ -78,6 +80,43 @@ class PostComponent extends StatefulWidget {
 
 class _PostComponentState extends State<PostComponent> {
   bool isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    UserController userController = Get.find<UserController>();
+    String uid = userController.user.value.uid;
+    List<dynamic> likes = widget.postDetails.likes;
+    for (var i = 0;i<likes.length;i++){
+      if (uid == likes[i]['userID']){
+        setState(() {
+          isLiked = true;
+        });
+        break;
+      }
+    }
+  }
+
+  void changeLiked(bool val) async{
+    debugPrint("Like Pressed");
+    setState(() {
+      isLiked = val;
+    });
+    String apiURL = "${backendURL}api/like/";
+    UserController userController = Get.find<UserController>();
+    String uid = userController.user.value.uid;
+    final response = await http.post(Uri.parse(apiURL),body: {
+      "postID":widget.postDetails.id.toString(),
+      "userID": uid.toString(),
+      "value": !val ? "-1" : "1"
+    });
+    if(response.statusCode != 200){
+      setState(() {
+        isLiked = !isLiked;
+      });
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -156,10 +195,15 @@ class _PostComponentState extends State<PostComponent> {
                               isLiked = !isLiked;
                             });
                           },
-                          child: Image(
-                              image: AssetImage(isLiked
-                                  ? 'assets/like.png'
-                                  : 'assets/unlike.png'))),
+                          child: GestureDetector(
+                            onTap: (){
+                              changeLiked(!isLiked);
+                            },
+                            child: Image(
+                                image: AssetImage(isLiked
+                                    ? 'assets/like.png'
+                                    : 'assets/unlike.png')),
+                          )),
                       SizedBox(
                         width: 15,
                       ),
