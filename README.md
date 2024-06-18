@@ -14,7 +14,10 @@ Welcome to Zorko, your ultimate food app!
 To get started with Zorko, follow these steps:
 
 1. **Installation**: Clone the repository.
-
+    ```sh
+git clone https://github.com/yourusername/zorko.git
+cd zorko
+    ```
 2. **Usage**:
 - Open the app on your device.
 - Explore nearby Zorko stores.
