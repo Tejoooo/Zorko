@@ -1,16 +1,32 @@
-# zorko
+# Zorko Food App
 
-A new Flutter project.
+Welcome to Zorko, your ultimate food app!
+
+## Features
+
+- **Nearby Zorko Stores**: Find Zorko stores near your location.
+- **Loyalty Points**: Earn points for using the app.
+- **Owner Dashboard**: Owners can monitor all processes through a dedicated dashboard.
+- **Device Compatibility**: Compatible with all devices.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+To get started with Zorko, follow these steps:
 
-A few resources to get you started if this is your first Flutter project:
+1. **Installation**: Clone the repository.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2. **Usage**:
+- Open the app on your device.
+- Explore nearby Zorko stores.
+- Earn and redeem loyalty points.
+- Owners can log in to the dashboard to manage processes.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. **Contributing**:
+We welcome contributions! If you have suggestions or found a bug, please open an issue or submit a pull request.
+
+4. **Support**:
+If you have any questions or need assistance, contact us at support@zorkoapp.com.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
