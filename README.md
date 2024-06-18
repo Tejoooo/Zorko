@@ -15,7 +15,7 @@ To get started with Zorko, follow these steps:
 
 1. **Installation**: Clone the repository.
     ```sh
-   git clone https://github.com/yourusername/zorko.git
+   git clone https://github.com/Tejoooo/Zorko/
     cd zorko
 3. **Usage**:
 - Open the app on your device.
